@@ -1,13 +1,14 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const authRoutes = require('./routes/authRoutes');
+const childRoutes = require('./routes/childRoutes');
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('השרת פועל!');
-});
+app.use('/api/auth', authRoutes);     
+app.use('/api/children', childRoutes); 
 
+const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`השרת מאזין על http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
