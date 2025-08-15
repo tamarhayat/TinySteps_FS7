@@ -1,8 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const { getAllChildren, addChild } = require('../controllers/childController');
+const {
+    getAllChildren,
+    getChildById,
+    addChild,
+    updateChild,
+    deleteChild
+} = require('../controllers/childController');
 
-router.get('/', getAllChildren);
-router.post('/', addChild);
+router.get('/', getAllChildren);          
+router.get('/:id', getChildById);         
+router.post('/', addChild);               
+router.put('/:id', updateChild);         
+router.delete('/:id', deleteChild);      
 
 module.exports = router;

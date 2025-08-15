@@ -1,5 +1,6 @@
 const { mainDB } = require('../db');
 
+// get all the children
 const getAllChildren = async (req, res) => {
     try {
         const [rows] = await mainDB.query('SELECT * FROM children');
@@ -9,9 +10,23 @@ const getAllChildren = async (req, res) => {
     }
 };
 
+// get child by ID
+const getChildById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [rows] = await mainDB.query('SELECT * FROM children WHERE id = ?', [id]);
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Child not found' });
+        }
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch child' });
+    }
+};
+
+// add new child
 const addChild = async (req, res) => {
     const { id, name, birth_date, parent_id } = req.body;
-
     try {
         await mainDB.query(
             'INSERT INTO children (id, name, birth_date, parent_id) VALUES (?, ?, ?, ?)',
@@ -23,4 +38,42 @@ const addChild = async (req, res) => {
     }
 };
 
-module.exports = { getAllChildren, addChild };
+// update a child
+const updateChild = async (req, res) => {
+    const { id } = req.params;
+    const { name, birth_date, parent_id } = req.body;
+    try {
+        const [result] = await mainDB.query(
+            'UPDATE children SET name = ?, birth_date = ?, parent_id = ? WHERE id = ?',
+            [name, birth_date, parent_id, id]
+        );
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Child not found' });
+        }
+        res.json({ message: 'Child updated successfully' });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to update child' });
+    }
+};
+
+// delete a child
+const deleteChild = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [result] = await mainDB.query('DELETE FROM children WHERE id = ?', [id]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Child not found' });
+        }
+        res.json({ message: 'Child deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to delete child' });
+    }
+};
+
+module.exports = {
+    getAllChildren,
+    getChildById,
+    addChild,
+    updateChild,
+    deleteChild
+};
