@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const path = require('path');
+
+
 
 const authRoutes = require('./routes/authRoutes');
 const childRoutes = require('./routes/childRoutes');
@@ -24,6 +27,8 @@ app.use('/api/appointments', appointmentRoutes);
 app.use('/api/measurements', measurementRoutes); 
 app.use('/api/files', fileRoutes); 
 app.use('/api/users', userRoutes);
+// Serve uploaded files statically
+app.use('/uploadFiles', express.static(path.join(__dirname, 'uploadFiles')));
 
 
 const PORT = 3000;

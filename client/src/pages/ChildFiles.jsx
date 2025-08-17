@@ -27,33 +27,54 @@ export default function ChildFiles() {
   }, [childId]);
 
   const handleUpload = async (e) => {
-    e.preventDefault();
-    if (!file) return alert("Please select a file.");
+  e.preventDefault();
+  if (!file) return alert("Please select a file.");
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("description", description);
-    formData.append("child_id", childId);
-    formData.append("uploaded_by", "300000010"); // לדוגמה, אפשר להחליף ביוזר הנוכחי
+  const currentUser = JSON.parse(localStorage.getItem("user")); 
+  const userId = currentUser?.id; 
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("description", description);  
+  formData.append("child_id", childId);
+  formData.append("uploaded_by", userId); 
+  setUploading(true);
+  try {
+    const res = await fetch("http://localhost:3000/api/files", {
+      method: "POST",
+      body: formData,
+    });
 
-    setUploading(true);
+    if (!res.ok) throw new Error("Upload failed");
+
+    alert("File uploaded successfully");
+    setFile(null);
+    setDescription("");
+    fetchFiles();
+  } catch (err) {
+    console.error(err);
+    alert("Failed to upload file");
+  } finally {
+    setUploading(false);
+  }
+};
+
+
+  const handleDelete = async (fileId) => {
+    if (!window.confirm("Are you sure you want to delete this file?")) return;
+
     try {
-      const res = await fetch("http://localhost:3000/api/files", {
-        method: "POST",
-        body: formData,
+      const res = await fetch(`http://localhost:3000/api/files/${fileId}`, {
+        method: "DELETE",
       });
 
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) throw new Error("Delete failed");
 
-      alert("File uploaded successfully");
-      setFile(null);
-      setDescription("");
-      fetchFiles(); 
+      // עדכון ה-state אחרי מחיקה
+      setFiles((prevFiles) => prevFiles.filter((f) => f.id !== fileId));
+      alert("File deleted successfully");
     } catch (err) {
       console.error(err);
-      alert("Failed to upload file");
-    } finally {
-      setUploading(false);
+      alert("Failed to delete file");
     }
   };
 
@@ -65,10 +86,7 @@ export default function ChildFiles() {
 
       {/* Upload Form */}
       <form className="upload-form" onSubmit={handleUpload}>
-        <input
-          type="file"
-          onChange={(e) => setFile(e.target.files[0])}
-        />
+        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
         <input
           type="text"
           placeholder="Description"
@@ -86,6 +104,7 @@ export default function ChildFiles() {
         <div className="files-grid">
           {files.map((f) => {
             const uploadDate = new Date(f.upload_date);
+            const fileUrl = `http://localhost:3000${f.file_path}`;
             return (
               <div key={f.id} className="file-card">
                 <h3>{f.description}</h3>
@@ -94,9 +113,17 @@ export default function ChildFiles() {
                   {uploadDate.toLocaleString("en-GB", { hour12: false })}
                 </p>
                 {f.file_path && (
-                  <a href={f.file_path} target="_blank" rel="noopener noreferrer">
-                    View File
-                  </a>
+                  <div className="file-actions">
+                    <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                      View File
+                    </a>{" "}
+                    |{" "}
+                    <a href={fileUrl} download>
+                      Download
+                    </a>{" "}
+                    |{" "}
+                    <button onClick={() => handleDelete(f.id)}>Delete</button>
+                  </div>
                 )}
               </div>
             );
