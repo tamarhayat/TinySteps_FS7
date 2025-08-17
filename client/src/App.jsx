@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import HomeNurse from "./pages/HomeNurse";
@@ -10,16 +10,20 @@ import ChildAppointments from "./pages/ChildAppointments";
 import ChildMeasurements from "./pages/ChildMeasurements";
 import BookAppointment from "./pages/BookAppointment";
 
-
 function AppRoutes() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const location = useLocation();
+  const [user, setUser] = useState(() => {
+    return JSON.parse(localStorage.getItem("user"));
+  });
 
   useEffect(() => {
     if (!user) {
-      navigate("/login");
+      if (location.pathname !== "/login" && location.pathname !== "/register") {
+        navigate("/login");
+      }
     }
-  }, [navigate, user]);
+  }, [navigate, user, location]);
 
   return (
     <Routes>
@@ -30,12 +34,14 @@ function AppRoutes() {
           <Navigate to="/login" />
         )
       } />
-      <Route path="/login" element={ 
+      <Route path="/login" element={
         user ? (
           user.role === "nurse" ? <Navigate to="/nurse" /> : <Navigate to="/parent" />
-        ) : <Login /> 
+        ) : (
+          <Login setUser={setUser} />
+        )
       } />
-      <Route path="/register" element={<Register />} />
+      <Route path="/register" element={<Register setUser={setUser} />} />
       <Route path="/nurse" element={<HomeNurse />} />
       <Route path="/parent" element={<HomeParent />} />
       <Route path="/child/:childId" element={<HomeChild />} />
@@ -43,7 +49,6 @@ function AppRoutes() {
       <Route path="/child/:childId/appointments" element={<ChildAppointments />} />
       <Route path="/child/:childId/measurements" element={<ChildMeasurements />} />
       <Route path="/child/:childId/appointments/new" element={<BookAppointment />} />
-
     </Routes>
   );
 }

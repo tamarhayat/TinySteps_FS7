@@ -1,18 +1,143 @@
-.measurements-container {
-  padding: 20px;
-}
+@import "./BookAppointments.css";
 
+/* Grid */
 .measurements-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-top: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
 }
 
+/* Measurement card */
 .measurement-card {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 12px;
-  background-color: #f9f9f9;
-  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 2px solid #e5e7eb;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.measurement-card:hover {
+  transform: translateY(-2px);
+  border-color: #93c5fd;
+}
+
+/* Header */
+.measurement-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.measurement-icon {
+  padding: 0.75rem;
+  border-radius: 50%;
+  background-color: #dbeafe;
+  margin-right: 1rem;
+}
+
+.measurement-icon .icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #2563eb;
+}
+
+.measurement-title {
+  font-weight: bold;
+  font-size: 1.125rem;
+  color: #1f2937;
+  margin: 0;
+}
+
+.measurement-date {
+  font-size: 0.875rem;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+}
+
+/* Details */
+.measurement-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  color: #374151;
+  font-weight: 500;
+}
+
+.detail-icon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.measurements-container {
+  padding: 2rem;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.measurements-container h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #1e3a8a;
+  font-weight: 600;
+}
+
+/* גריד עם עמודה אחת */
+.measurements-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* תמיד עמודה אחת */
+  gap: 1rem;
+}
+
+/* כרטיסיות מדידה */
+.measurement-card {
+  background: #ffffff;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.measurement-card:hover {
+  transform: translateY(-3px);
+  border-color: #93c5fd;
+}
+
+/* כותרת כרטיס */
+.measurement-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.measurement-date {
+  font-weight: 600;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* גוף הכרטיס */
+.measurement-body p {
+  margin: 0.4rem 0;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }

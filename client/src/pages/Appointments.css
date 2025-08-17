@@ -1,48 +1,37 @@
-.appointments-container {
-  padding: 20px;
-}
-
+/* appointments grid*/
 .appointments-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
 }
 
+/* cards*/
 .appointment-card {
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 16px;
-  background-color: #fafafa;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
+  padding: 1.25rem;
+  text-align: left;
+  font-family: inherit;
+  width: 100%;      
+  box-sizing: border-box;
 }
 
 .appointment-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
+  border-color: #93c5fd;
 }
 
-.appointment-card h3 {
-  margin-top: 0;
-  font-size: 1.2rem;
-  color: #333;
+/* מצב past/upcoming */
+.appointment-card.past {
+  border-color: #bbf7d0;
+  background-color: #f0fdf4;
 }
 
-.appointment-card p {
-  margin: 6px 0;
-  color: #555;
-}
-
-.status {
-  display: block;
-  margin-top: 12px;
-  font-weight: bold;
-}
-
-.past-status {
-  color: #888;
-}
-
-.upcoming-status {
-  color: #2e7d32;
+.appointment-card.upcoming {
+  border-color: #93c5fd;
+  background-color: #eff6ff;
 }

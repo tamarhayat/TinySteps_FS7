@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Auth.css";
 
-export default function Login() {
+export default function Login({setUser}) {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -19,6 +19,7 @@ export default function Login() {
       const data = await res.json();
       if (res.ok) {
         localStorage.setItem("user", JSON.stringify(data.user));
+        setUser(data.user);
         navigate("/");
       } else {
         alert(data.message || "Login failed");

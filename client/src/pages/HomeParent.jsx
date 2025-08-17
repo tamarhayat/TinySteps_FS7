@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaChild } from "react-icons/fa"; // אייקון חמוד
+import "./Home.css";
 
 export default function HomeParent() {
   const [children, setChildren] = useState([]);
@@ -17,7 +19,6 @@ export default function HomeParent() {
         return res.json();
       })
       .then((data) => {
-        // ה-controller מחזיר מערך ישיר
         setChildren(Array.isArray(data) ? data : []);
       })
       .catch((err) => {
@@ -26,21 +27,51 @@ export default function HomeParent() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (children.length === 0) return <p>No children found for this parent.</p>;
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-content">
+          <div className="loading-spinner"></div>
+          <p className="loading-text">Loading your children...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (children.length === 0) {
+    return (
+      <div className="no-children">
+        <FaChild className="no-children-icon" />
+        <h3>No children found</h3>
+        <p>It looks like you don’t have any children registered yet.</p>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Your Children</h2>
-      {children.map((child) => (
-        <button
-          key={child.id}
-          style={{ display: "block", margin: "10px 0", padding: "10px", width: "200px" }}
-          onClick={() => navigate(`/child/${child.id}`)}
-        >
-          {child.name} ({child.id})
-        </button>
-      ))}
+    <div className="home-parent-page">
+      <div className="header">
+        <p className="header-icon">🍼</p>
+        <h1 className="main-title"> Welcome Back!</h1>
+        <p className="subtitle">Choose your child to continue:</p>
+        <div className="divider"></div>
+      </div>
+
+      <div className="children-grid">
+        {children.map((child) => (
+          <button
+            key={child.id}
+            className="child-card"
+            onClick={() => navigate(`/child/${child.id}`)}
+          >
+            <div className="child-card-header">
+              <FaChild className="child-icon" />
+              <h3>{child.name}</h3>
+            </div>
+            <p className="child-id">ID: {child.id}</p>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
