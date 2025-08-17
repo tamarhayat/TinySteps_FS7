@@ -1,0 +1,48 @@
+.appointments-container {
+  padding: 20px;
+}
+
+.appointments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.appointment-card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.appointment-card:hover {
+  transform: translateY(-3px);
+}
+
+.appointment-card h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.appointment-card p {
+  margin: 6px 0;
+  color: #555;
+}
+
+.status {
+  display: block;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+.past-status {
+  color: #888;
+}
+
+.upcoming-status {
+  color: #2e7d32;
+}

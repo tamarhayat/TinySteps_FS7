@@ -3,6 +3,7 @@ const router = express.Router();
 const {
     getAllMeasurements,
     getMeasurementById,
+    getMeasurementsByChildId,
     addMeasurement,
     updateMeasurement,
     deleteMeasurement
@@ -10,6 +11,7 @@ const {
 
 router.get('/', getAllMeasurements);
 router.get('/:id', getMeasurementById);
+router.get('/child/:childId', getMeasurementsByChildId);
 router.post('/', addMeasurement);
 router.put('/:id', updateMeasurement);
 router.delete('/:id', deleteMeasurement);

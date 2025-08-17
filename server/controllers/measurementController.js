@@ -21,6 +21,17 @@ const getMeasurementById = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch measurement' });
     }
 };
+// get measurements by child ID
+const getMeasurementsByChildId = async (req, res) => {
+    const { childId } = req.params;
+    try {
+        const [rows] = await mainDB.query('SELECT * FROM measurements WHERE child_id = ?', [childId]);
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch measurements for this child' });
+    }
+};
+
 
 const addMeasurement = async (req, res) => {
     const { id, child_id, date, weight, height } = req.body;
@@ -68,6 +79,7 @@ const deleteMeasurement = async (req, res) => {
 module.exports = {
     getAllMeasurements,
     getMeasurementById,
+    getMeasurementsByChildId,
     addMeasurement,
     updateMeasurement,
     deleteMeasurement

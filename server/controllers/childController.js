@@ -24,6 +24,20 @@ const getChildById = async (req, res) => {
     }
 };
 
+//  get children by parent ID
+const getChildrenByParentId = async (req, res) => {
+    const { parentId } = req.params;
+    try {
+        const [rows] = await mainDB.query('SELECT * FROM children WHERE parent_id = ?', [parentId]);
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'No children found for this parent' });
+        }
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch children by parent ID' });
+    }
+};
+
 // add new child
 const addChild = async (req, res) => {
     const { id, name, birth_date, parent_id } = req.body;
@@ -73,6 +87,7 @@ const deleteChild = async (req, res) => {
 module.exports = {
     getAllChildren,
     getChildById,
+    getChildrenByParentId,
     addChild,
     updateChild,
     deleteChild

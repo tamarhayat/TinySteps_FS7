@@ -4,6 +4,7 @@ const appointmentController = require('../controllers/appointmentController');
 
 router.get('/', appointmentController.getAllAppointments);
 router.get('/:id', appointmentController.getAppointmentById);
+router.get('/child/:childId', appointmentController.getAppointmentsByChildId);
 router.post('/', appointmentController.addAppointment);
 router.put('/:id', appointmentController.updateAppointment);
 router.delete('/:id', appointmentController.deleteAppointment);

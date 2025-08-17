@@ -4,6 +4,12 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import HomeNurse from "./pages/HomeNurse";
 import HomeParent from "./pages/HomeParent";
+import HomeChild from "./pages/HomeChild";
+import ChildFiles from "./pages/ChildFiles";
+import ChildAppointments from "./pages/ChildAppointments";
+import ChildMeasurements from "./pages/ChildMeasurements";
+import BookAppointment from "./pages/BookAppointment";
+
 
 function AppRoutes() {
   const navigate = useNavigate();
@@ -32,6 +38,12 @@ function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/nurse" element={<HomeNurse />} />
       <Route path="/parent" element={<HomeParent />} />
+      <Route path="/child/:childId" element={<HomeChild />} />
+      <Route path="/child/:childId/files" element={<ChildFiles />} />
+      <Route path="/child/:childId/appointments" element={<ChildAppointments />} />
+      <Route path="/child/:childId/measurements" element={<ChildMeasurements />} />
+      <Route path="/child/:childId/appointments/new" element={<BookAppointment />} />
+
     </Routes>
   );
 }

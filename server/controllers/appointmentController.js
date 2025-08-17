@@ -21,6 +21,17 @@ const getAppointmentById = async (req, res) => {
     }
 };
 
+// get appointments by child ID
+const getAppointmentsByChildId = async (req, res) => {
+    const { childId } = req.params;
+    try {
+        const [rows] = await mainDB.query('SELECT * FROM appointments WHERE child_id = ?', [childId]);
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch appointments for this child' });
+    }
+};
+
 // add new appointment
 const addAppointment = async (req, res) => {
     const { id, child_id, date, type, notes } = req.body;
@@ -62,6 +73,7 @@ const deleteAppointment = async (req, res) => {
 module.exports = {
     getAllAppointments,
     getAppointmentById,
+    getAppointmentsByChildId,
     addAppointment,
     updateAppointment,
     deleteAppointment
