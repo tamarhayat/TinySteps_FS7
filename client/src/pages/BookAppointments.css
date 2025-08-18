@@ -2,7 +2,7 @@
 
 /* Base styles */
 .appointment-page {
-  min-height: 100vh;
+  max-height: 100vh;
   background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
 }
 
@@ -167,7 +167,6 @@
   padding: 1.5rem;
   text-align: left;
   width: 100%;
-  font-family: inherit;
 }
 
 .appointment-card:hover {

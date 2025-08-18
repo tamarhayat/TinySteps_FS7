@@ -9,8 +9,7 @@ export default function HomeChild() {
   return (
     <div className="home-child-page">
       <div className="header">
-        <div className="header-icon">👶</div>
-        <h2 className="main-title">My Dashboard</h2>
+        <h2 className="main-title">My Dashboard 👶</h2>
         <p className="subtitle">Child ID: {childId}</p>
         <div className="divider"></div>
       </div>
