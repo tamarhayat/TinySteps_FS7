@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Baby, Home, User, LogOut } from "lucide-react";
 import "./Navbar.css";
+import logo from "../assets/logo copy.png"; 
+
 
 export default function Navbar({ user, setUser }) {
   const navigate = useNavigate();
@@ -65,7 +67,9 @@ export default function Navbar({ user, setUser }) {
     <nav className="navbar">
       <div className="flex items-center gap-4">
         <button onClick={goHome} className="nav-btn">
-          <Home size={20} /> Home
+          <div className="logo-nav" >
+            <img src={logo} alt="Logo" />
+          </div>
         </button>
       </div>
 
