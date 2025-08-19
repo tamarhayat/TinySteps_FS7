@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Upload, FileText, Download, Eye, Trash2, PlusCircle } from "lucide-react";
+import { Upload, FileText, Download, Eye, Trash2, PlusCircle,CircleX  } from "lucide-react";
 import "./Files.css";
+import Message from "../components/Message";  
 
 export default function ChildFiles() {
   const { childId } = useParams();
@@ -11,6 +12,8 @@ export default function ChildFiles() {
   const [file, setFile] = useState(null);
   const [description, setDescription] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const fetchFiles = async () => {
     try {
@@ -30,7 +33,7 @@ export default function ChildFiles() {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    if (!file) return alert("Please select a file.");
+    if (!file) return setError("Please select a file to upload.")&& setSuccess("");
 
     const currentUser = JSON.parse(localStorage.getItem("user"));
     const userId = currentUser?.id;
@@ -50,14 +53,16 @@ export default function ChildFiles() {
 
       if (!res.ok) throw new Error("Upload failed");
 
-      alert("File uploaded successfully");
+      setSuccess("File uploaded successfully");
+      setError("");
       setFile(null);
       setDescription("");
       setShowForm(false);
       fetchFiles();
     } catch (err) {
       console.error(err);
-      alert("Failed to upload file");
+      setError("Failed to upload file");
+      setSuccess("");
     } finally {
       setUploading(false);
     }
@@ -74,10 +79,12 @@ export default function ChildFiles() {
       if (!res.ok) throw new Error("Delete failed");
 
       setFiles((prevFiles) => prevFiles.filter((f) => f.id !== fileId));
-      alert("File deleted successfully");
+      setSuccess("File deleted successfully");
+      setError("");
     } catch (err) {
       console.error(err);
-      alert("Failed to delete file");
+      setError("Failed to delete file");
+      setSuccess("");
     }
   };
 
@@ -89,18 +96,33 @@ export default function ChildFiles() {
         <h2 className="files-title">
           <FileText className="icon-blue" /> Files for Child {childId}
         </h2>
-        <button className="btn-add" onClick={() => setShowForm(!showForm)}>
-          <PlusCircle /> {showForm ? "Cancel" : "Add File"}
+        <button className="btn-add" onClick={() => {setShowForm(!showForm);setError(""); setSuccess("");}}>
+          {showForm ? <CircleX  />: <PlusCircle />} {showForm ? "Cancel" : "Add File"}
         </button>
       </div>
-
+      {error && <Message type="error" text={error} />}
+      {success && <Message type="success" text={success} />}
       {showForm && (
         <form className="upload-form" onSubmit={handleUpload}>
           <input
-            type="file"
-            onChange={(e) => setFile(e.target.files[0])}
-            className="input-file"
-          />
+  type="file"
+  onChange={(e) => {
+        const selectedFile = e.target.files[0];
+        if (!selectedFile) return;
+
+        const allowedTypes = ["application/pdf", "image/png", "image/jpeg"];
+        if (!allowedTypes.includes(selectedFile.type)) {
+          setError("Only PDF or image files are allowed.");
+          setFile(null);
+          return;
+        }
+
+        setFile(selectedFile);
+        setError("");
+      }}
+        className="input-file"
+        />
+
           <input
             type="text"
             placeholder="Description"

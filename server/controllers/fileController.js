@@ -43,7 +43,6 @@ const addFile = async (req, res) => {
     return res.status(400).json({ error: "No file uploaded" });
   }
 
-  // הנתיב שנשמר ב־DB כדי שהקליינט יוכל לגשת אליו
   const file_path = `/uploadFiles/${req.file.filename}`;
   const upload_date = new Date();
 
@@ -53,7 +52,6 @@ const addFile = async (req, res) => {
       [child_id, file_path, description, uploaded_by, upload_date]
     );
 
-    // החזרת פרטי הקובץ החדשים
     res.json({
       message: 'File added successfully',
       file: {

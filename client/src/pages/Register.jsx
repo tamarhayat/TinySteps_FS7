@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Auth.css";
 import logo from "../assets/logo.png"; 
+import Message from "../components/Message";  
 
 
 export default function Register() {
@@ -11,6 +12,8 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("parent");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
@@ -27,11 +30,13 @@ export default function Register() {
         localStorage.setItem("user", JSON.stringify(data.user));
         navigate("/"); 
       } else {
-        alert(data.error || "Registration failed");
+        setError(data.error || "Registration failed. Please try again.");
+        setSuccess("");
       }
     } catch (err) {
       console.error(err);
-      alert("Error registering");
+      setError("An error occurred while registering.");
+      setSuccess(""); 
     }
   };
 
@@ -42,6 +47,8 @@ export default function Register() {
       </div>
       <div className="auth-container">
         <h2 style={{ marginTop: "5%" }}>Register</h2>
+        <Message type="success" text={success} />
+        <Message type="error" text={error} />
         <form onSubmit={handleRegister}>
           <input
             type="text"

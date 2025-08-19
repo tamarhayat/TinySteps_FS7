@@ -2,10 +2,14 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Auth.css";
 import logo from "../assets/logo.png"; 
+import Message from "../components/Message";  
 
 export default function Login({ setUser }) {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -23,11 +27,13 @@ export default function Login({ setUser }) {
         setUser(data.user);
         navigate("/");
       } else {
-        alert(data.message || "Login failed");
+        setError(data.error|| "Login failed. Please try again.");
+        setSuccess("");
       }
     } catch (err) {
       console.error(err);
-      alert("Error logging in");
+      setError("An error occurred while logging in.");
+      setSuccess("");
     }
   };
 
@@ -38,6 +44,8 @@ export default function Login({ setUser }) {
       </div>
       <div className="auth-container">
         <h2>Login</h2>
+        <Message type="success" text={success} />
+        <Message type="error" text={error} />
         <form onSubmit={handleLogin}>
           <input
             type="text"

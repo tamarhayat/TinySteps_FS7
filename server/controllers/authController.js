@@ -4,7 +4,6 @@ const login = async (req, res) => {
   const { id, password } = req.body;
 
   try {
-    // בדיקה אם קיימת התאמה ב-user_auth
     const [authRows] = await userDB.query('SELECT * FROM user_auth WHERE id = ?', [id]);
     if (!authRows.length) {
       return res.status(401).json({ error: 'User not found' });
@@ -15,7 +14,6 @@ const login = async (req, res) => {
       return res.status(401).json({ error: 'Incorrect password' });
     }
 
-    // הבאת פרטי המשתמש מהטבלה הרגילה
     const [userRows] = await mainDB.query(
       'SELECT id, first_name, last_name, email, role FROM users WHERE id = ?',
       [id]
@@ -36,7 +34,6 @@ const register = async (req, res) => {
   const { id, first_name, last_name, email, password, role } = req.body;
 
   try {
-    // בדיקה אם המשתמש כבר קיים ב-user_auth
     const [existing] = await userDB.query('SELECT id FROM user_auth WHERE id = ?', [id]);
     if (existing.length > 0) {
       return res.status(400).json({ error: 'User with this ID already exists' });

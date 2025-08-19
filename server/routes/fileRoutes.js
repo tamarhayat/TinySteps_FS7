@@ -24,7 +24,6 @@ router.get('/', fileController.getAllFiles);
 router.get('/:id', fileController.getFileById);
 router.get('/child/:childId', fileController.getFilesByChildId);
 
-// POST עם multer כדי לקבל קובץ
 router.post('/', upload.single('file'), fileController.addFile);
 
 router.put('/:id', fileController.updateFile);
