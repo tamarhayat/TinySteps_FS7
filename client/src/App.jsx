@@ -18,6 +18,12 @@ function AppRoutes() {
   const [user, setUser] = useState(() => {
     return JSON.parse(localStorage.getItem("user"));
   });
+  const [children, setChildren] = useState(() => {
+    return JSON.parse(localStorage.getItem("children")) || [];  
+  });
+  const [selectedChild, setSelectedChild] = useState(() => {
+    return JSON.parse(localStorage.getItem("selectedChild")) || null;
+  });
 
   useEffect(() => {
     if (!user) {
@@ -31,11 +37,13 @@ function AppRoutes() {
 
   return (
     <>
-      {!hideNavbar && <Navbar user={user} setUser={setUser} />}
+      {!hideNavbar && <Navbar user={user} setUser={setUser} 
+                              selectedChild={selectedChild} setSelectedChild={setSelectedChild}
+                              children={children} setChildren={setChildren} />}
       <Routes>
         <Route path="/" element={
           user ? (
-            user.role === "nurse" ? <HomeNurse /> : <HomeParent />
+            user.role === "nurse" ? <HomeNurse /> : <HomeParent children={children} setChildren={setChildren} setSelectedChild={setSelectedChild}/>
           ) : (
             <Navigate to="/login" />
           )
@@ -44,12 +52,12 @@ function AppRoutes() {
           user ? (
             user.role === "nurse" ? <Navigate to="/nurse" /> : <Navigate to="/parent" />
           ) : (
-            <Login setUser={setUser} />
+            <Login setUser={setUser} setChildren={setChildren} setSelectedChild={setSelectedChild}/>
           )
         } />
         <Route path="/register" element={<Register setUser={setUser} />} />
         <Route path="/nurse" element={<HomeNurse />} />
-        <Route path="/parent" element={<HomeParent />} />
+        <Route path="/parent" element={<HomeParent children={children} setChildren={setChildren} setSelectedChild={setSelectedChild}/>} />
         <Route path="/child/:childId" element={<HomeChild />} />
         <Route path="/child/:childId/files" element={<ChildFiles />} />
         <Route path="/child/:childId/appointments" element={<ChildAppointments />} />

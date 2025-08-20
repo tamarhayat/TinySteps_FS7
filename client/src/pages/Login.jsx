@@ -4,12 +4,11 @@ import "./Auth.css";
 import logo from "../assets/logo.png"; 
 import Message from "../components/Message";  
 
-export default function Login({ setUser }) {
+export default function Login({ setUser ,setChildren, setSelectedChild}) {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -23,11 +22,35 @@ export default function Login({ setUser }) {
 
       const data = await res.json();
       if (res.ok) {
-        localStorage.setItem("user", JSON.stringify(data.user));
         setUser(data.user);
-        navigate("/");
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        if (data.user?.role === "parent") {
+          // Fetch children
+          const url = `http://localhost:3000/api/children/parent/${data.user.id}`;
+          fetch(url)
+            .then((res) => {
+              if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+              return res.json();
+            })
+            .then((childrenData) => {
+              const list = Array.isArray(childrenData) ? childrenData : [];
+              setChildren(list);
+
+              localStorage.setItem("children", JSON.stringify(list));
+              localStorage.setItem("selectedChild", JSON.stringify(null));
+              navigate("/");
+            })
+            .catch((err) => {
+              console.error("Fetch children error:", err);
+              navigate("/"); 
+            });
+        } else {
+          
+          navigate("/");
+        }
       } else {
-        setError(data.error|| "Login failed. Please try again.");
+        setError(data.error || "Login failed. Please try again.");
         setSuccess("");
       }
     } catch (err) {

@@ -4,13 +4,39 @@ import "./home.css";
 
 export default function HomeChild() {
   const { childId } = useParams();
-  
+
+  // שליפת הילד הנבחר מ-LS
+  const selectedChild = JSON.parse(localStorage.getItem("selectedChild"));
+
+  if (!selectedChild || selectedChild.id !== childId) {
+    return (
+      <div className="home-child-page">
+        <h2 className="main-title">No child selected ❌</h2>
+        <p className="subtitle">Please go back and select a child.</p>
+      </div>
+    );
+  }
+
+  // פונקציה לעיצוב תאריך לידה יפה
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("he-IL", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   return (
     <div className="home-child-page">
       <div className="header">
-        <h2 className="main-title">My Dashboard 👶</h2>
-        <p className="subtitle">Child ID: {childId}</p>
+        <h2 className="main-title">Welcome, {selectedChild.name} 👶</h2>
+        <p className="subtitle">ID: {selectedChild.id}</p>
+        <p>Birth Date: {new Date(selectedChild.birth_date).toLocaleDateString("en-GB", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit"
+        })}</p>
         <div className="divider"></div>
       </div>
 

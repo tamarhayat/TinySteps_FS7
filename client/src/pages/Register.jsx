@@ -4,8 +4,7 @@ import "./Auth.css";
 import logo from "../assets/logo.png"; 
 import Message from "../components/Message";  
 
-
-export default function Register() {
+export default function Register({ setUser,  setChildren}) {
   const [id, setId] = useState("");
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
@@ -14,6 +13,7 @@ export default function Register() {
   const [role, setRole] = useState("parent");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
@@ -26,13 +26,33 @@ export default function Register() {
       });
 
       const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-        navigate("/"); 
-      } else {
+      if (!res.ok) {
         setError(data.error || "Registration failed. Please try again.");
         setSuccess("");
+        return;
       }
+
+      localStorage.setItem("user", JSON.stringify(data.user));
+      setUser(data.user);
+
+      if (data.user?.role === "parent") {
+        try {
+          const childrenRes = await fetch(`http://localhost:3000/api/children/parent/${data.user.id}`);
+          if (!childrenRes.ok) throw new Error(`Request failed: ${childrenRes.status}`);
+          const childrenData = await childrenRes.json();
+          const list = Array.isArray(childrenData) ? childrenData : [];
+          setChildren(list); 
+          localStorage.setItem("children", JSON.stringify(list));
+          localStorage.setItem("selectedChild", JSON.stringify(null));
+        } catch (err) {
+          console.error("Fetch children error:", err);
+          setChildren([]);
+          localStorage.setItem("children", JSON.stringify([]));
+          localStorage.setItem("selectedChild", JSON.stringify(null));
+        }
+      }
+      navigate("/"); 
+
     } catch (err) {
       console.error(err);
       setError("An error occurred while registering.");
@@ -96,5 +116,5 @@ export default function Register() {
         </p>
       </div>
     </div>
-  );
+  ); 
 }
