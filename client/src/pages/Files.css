@@ -154,3 +154,22 @@
   font-size: 1rem;
   text-align: center;
 }
+
+
+/* רספונסיביות לטופס העלאת קובץ */
+@media (max-width: 600px) {
+  .upload-form {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .input-file,
+  .input-text,
+  .btn-upload {
+    width: 100%;
+  }
+
+  .btn-upload {
+    justify-content: center;
+  }
+}

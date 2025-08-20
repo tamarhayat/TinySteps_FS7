@@ -64,13 +64,11 @@ nav select option {
 }
 
 
-/* עטיפת הדרופבוקס + חץ */
 nav .dropdown-wrapper {
   position: relative;
   display: inline-block;
 }
 
-/* חץ מותאם אישית */
 nav .dropdown-wrapper::after {
   content: "▼";
   font-size: 0.7rem;
@@ -104,18 +102,6 @@ nav .right {
   gap: 1rem;
 }
 
-@media (max-width: 600px) {
-  nav {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  nav .center {
-    position: static;
-    transform: none;
-  }
-}
 
 *{  
   font-family: "Varela Round", sans-serif;
