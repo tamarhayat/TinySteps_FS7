@@ -104,8 +104,8 @@ export default function ChildMeasurements() {
             {years > 0
               ? `${years} years ${months} months`
               : months > 0
-              ? `${months}m ${days}d`
-              : `${days}d`}
+              ? `${months}month ${days}days`
+              : `${days}days`}
           </p>
         </div>
       </div>
