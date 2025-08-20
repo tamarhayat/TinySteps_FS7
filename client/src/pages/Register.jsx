@@ -10,19 +10,20 @@ export default function Register({ setUser, setChildren }) {
   const [last_name, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [retypePassword, setRetypePassword] = useState(""); // שדה חדש
+  const [retypePassword, setRetypePassword] = useState("");
   const [role, setRole] = useState("parent");
+  const [adminCodeModal, setAdminCodeModal] = useState(false);
+  const [adminCodeInput, setAdminCodeInput] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   const navigate = useNavigate();
-
   const isIdValid = /^[0-9]{9}$/.test(id);
+  const ADMIN_CODE = "0000"; // לשימוש לימודי בלבד
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // בדיקות בסיסיות
     if (!isIdValid) {
       setError("ID must be exactly 9 digits.");
       setSuccess("");
@@ -31,6 +32,18 @@ export default function Register({ setUser, setChildren }) {
 
     if (password !== retypePassword) {
       setError("Passwords do not match.");
+      setSuccess("");
+      return;
+    }
+
+    // אם המשתמש בחר nurse, פתיחת modal
+    if (role === "nurse" && !adminCodeModal) {
+      setAdminCodeModal(true);
+      return;
+    }
+
+    if (role === "nurse" && adminCodeInput !== ADMIN_CODE) {
+      setError("Incorrect Admin Code.");
       setSuccess("");
       return;
     }
@@ -55,14 +68,12 @@ export default function Register({ setUser, setChildren }) {
       if (data.user?.role === "parent") {
         try {
           const childrenRes = await fetch(`http://localhost:3000/api/children/parent/${data.user.id}`);
-          if (!childrenRes.ok) throw new Error(`Request failed: ${childrenRes.status}`);
           const childrenData = await childrenRes.json();
           const list = Array.isArray(childrenData) ? childrenData : [];
           setChildren?.(list);
           localStorage.setItem("children", JSON.stringify(list));
           localStorage.setItem("selectedChild", JSON.stringify(null));
-        } catch (err) {
-          console.error("Fetch children error:", err);
+        } catch {
           setChildren?.([]);
           localStorage.setItem("children", JSON.stringify([]));
           localStorage.setItem("selectedChild", JSON.stringify(null));
@@ -70,8 +81,7 @@ export default function Register({ setUser, setChildren }) {
       }
 
       navigate("/");
-    } catch (err) {
-      console.error(err);
+    } catch {
       setError("An error occurred while registering.");
       setSuccess("");
     }
@@ -95,7 +105,6 @@ export default function Register({ setUser, setChildren }) {
             inputMode="numeric"
             required
           />
-
           <input
             type="text"
             placeholder="First Name"
@@ -131,14 +140,35 @@ export default function Register({ setUser, setChildren }) {
             onChange={(e) => setRetypePassword(e.target.value)}
             required
           />
-
           <select value={role} onChange={(e) => setRole(e.target.value)}>
             <option value="parent">Parent</option>
             <option value="nurse">Nurse</option>
           </select>
-
           <button type="submit">Register</button>
         </form>
+
+        {/* Modal Admin Code */}
+        {adminCodeModal && (
+          <div className="modal-backdrop">
+            <div className="modal">
+              <h3>Enter Admin Code</h3>
+              <input
+                type="password"
+                value={adminCodeInput}
+                onChange={(e) => setAdminCodeInput(e.target.value)}
+              />
+              <button onClick={handleRegister}>Submit</button>
+              <button onClick={() => {setAdminCodeModal(false);
+                setAdminCodeInput("");
+                setRole("parent");
+                setError("");
+                setSuccess("");
+              }
+              }>Cancel</button>
+            </div>
+          </div>
+        )}
+
         <p className="switch-text">
           Already have an account? <Link to="/login">Login here</Link>
         </p>
