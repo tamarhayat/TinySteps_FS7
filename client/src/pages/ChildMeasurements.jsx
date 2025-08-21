@@ -23,6 +23,7 @@ export default function ChildMeasurements() {
       const res = await fetch(`http://localhost:3000/api/measurements/child/${childId}`);
       if (!res.ok) throw new Error("Failed to fetch measurements");
       const data = await res.json();
+        data.sort((a, b) => new Date(b.date) - new Date(a.date));
       setMeasurements(data);
     } catch (err) {
       console.error(err);
@@ -158,7 +159,7 @@ export default function ChildMeasurements() {
       <div className="container">
         {/* Header */}
         <div className="header">
-          <h1 className="main-title">🍼 My measurements</h1>
+          <h1 className="main-title"> My measurements 🍼</h1>
           <div className="divider"></div>
         </div>
         {/* navigated from nurse */}
@@ -235,37 +236,58 @@ export default function ChildMeasurements() {
         {/* Measurements Grid */}
         <div className="measurements-grid">
           {measurements.map((m) => {
-            const measurementDate = new Date(m.date);
-            return (
-              <div key={`measurement-${m.id}`} className="measurement-card">
-                <div className="measurement-header">
-                  <div className="measurement-icon">
-                    <Activity className="icon" />
-                  </div>
-                  <div>
-                    <h3 className="measurement-title">Measurement Record</h3>
-                    <p className="measurement-date">
-                      <Calendar className="detail-icon" />
-                      {measurementDate.toLocaleDateString("en-US", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </p>
-                  </div>
-                </div>
+  const measurementDate = new Date(m.date);
 
-                <div className="measurement-details">
-                  <div className="detail-item">
-                    <Weight className="detail-icon" />
-                    <span>Weight: {parseFloat(m.weight_kg).toFixed(2)} kg</span>
-                  </div>
-                  <div className="detail-item">
-                    <Ruler className="detail-icon" />
-                    <span>Height: {parseFloat(m.height_cm).toFixed(2)} cm</span>
-                  </div>
-                </div>
+  // שליפת הילד מה-LS
+  const selectedChild = JSON.parse(localStorage.getItem("selectedChild"));
+  const birthDate = new Date(selectedChild.birth_date);
+
+  // חישוב גיל בעת המדידה
+  const ageDiff = measurementDate - birthDate;
+  const ageDate = new Date(ageDiff);
+
+  const years = ageDate.getUTCFullYear() - 1970;
+  const months = ageDate.getUTCMonth();
+  const days = ageDate.getUTCDate() - 1;
+
+  return (
+    <div key={`measurement-${m.id}`} className="measurement-card">
+      <div className="measurement-header">
+        <div className="measurement-icon">
+          <Activity className="icon" />
+        </div>
+        <div>
+          <h3 className="measurement-title">Measurement Record</h3>
+          <p className="measurement-date">
+            <Calendar className="detail-icon" />
+            {measurementDate.toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </p>
+          <p className="measurement-age">
+            Age:{" "}
+            {years > 0
+              ? `${years} years ${months} months`
+              : months > 0
+              ? `${months}month ${days}days`
+              : `${days}days`}
+          </p>
+        </div>
+      </div>
+
+      <div className="measurement-details">
+        <div className="detail-item">
+          <Weight className="detail-icon" />
+          <span>Weight: {parseFloat(m.weight_kg).toFixed(2)} kg</span>
+        </div>
+        <div className="detail-item">
+          <Ruler className="detail-icon" />
+          <span>Height: {parseFloat(m.height_cm).toFixed(2)} cm</span>
+        </div>
+      </div>
 
                 {/* Nurse-only actions */}
                 {from === "nurse" && (
@@ -284,9 +306,10 @@ export default function ChildMeasurements() {
                   </div>
                 )}
 
-              </div>
-            );
-          })}
+    </div>
+  );
+})}
+
         </div>
       </div>
     </div>

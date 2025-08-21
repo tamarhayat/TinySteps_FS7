@@ -98,8 +98,12 @@
   flex-shrink: 0;
 }
 
-.measurements-container {
+.container {
   padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .measurements-container h2 {
@@ -109,11 +113,10 @@
   font-weight: 600;
 }
 
-/* גריד עם עמודה אחת */
 .measurements-grid {
+  width: 80%;
   display: grid;
-  grid-template-columns: 1fr;
-  /* תמיד עמודה אחת */
+  grid-template-columns: 1fr; 
   gap: 1rem;
 }
 
