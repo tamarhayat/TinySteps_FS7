@@ -11,6 +11,27 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+// get users by role
+const getUsersByRole = async (req, res) => {
+  const { role } = req.params; 
+  try {
+    const [rows] = await mainDB.query(
+      'SELECT id, first_name, last_name, email, role FROM users WHERE role = ?',
+      [role]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: `No users found with role: ${role}` });
+    }
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch users by role' });
+  }
+};
+
+
 // get user by ID
 const getUserById = async (req, res) => {
   const { id } = req.params;
@@ -81,6 +102,7 @@ const deleteUser = async (req, res) => {
 
 module.exports = {
   getAllUsers,
+  getUsersByRole,
   getUserById,
   addUser,
   updateUser,

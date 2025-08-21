@@ -3,6 +3,11 @@ import { useEffect, useState } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import HomeNurse from "./pages/HomeNurse";
+import NurseAppointments from "./pages/NurseAppointments";
+import CreateAppointment from "./pages/CreateAppointment";
+import AllPatients from "./pages/AllPatients";
+import AddPatient from "./pages/AddPatient";
+
 import HomeParent from "./pages/HomeParent";
 import HomeChild from "./pages/HomeChild";
 import ChildFiles from "./pages/ChildFiles";
@@ -49,6 +54,10 @@ function AppRoutes() {
         } />
         <Route path="/register" element={<Register setUser={setUser} />} />
         <Route path="/nurse" element={<HomeNurse />} />
+        <Route path="/nurse/:nurseId/appointments" element={<NurseAppointments />} />
+        <Route path="/nurse/:nurseId/appointments/new" element={<CreateAppointment />} />
+        <Route path="/nurse/:nurseId/children" element={<AllPatients />} />
+        <Route path="/nurse/:nurseId/child/new" element={<AddPatient />} />
         <Route path="/parent" element={<HomeParent />} />
         <Route path="/child/:childId" element={<HomeChild />} />
         <Route path="/child/:childId/files" element={<ChildFiles />} />

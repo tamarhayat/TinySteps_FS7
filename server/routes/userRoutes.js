@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {
   getAllUsers,
+  getUsersByRole,
   getUserById,
   addUser,
   updateUser,
@@ -10,6 +11,7 @@ const {
 
 // CRUD routes
 router.get('/', getAllUsers);            // Read all users
+router.get('/:role', getUsersByRole);     // Read user by role
 router.get('/:id', getUserById);         // Read user by ID
 router.post('/', addUser);               // Create new user
 router.put('/:id', updateUser);          // Update user

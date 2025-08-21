@@ -21,6 +21,17 @@ const getAppointmentById = async (req, res) => {
   }
 };
 
+// get appointments by nurse ID
+const getAppointmentsByNurseId = async (req, res) => {
+  const { nurseId } = req.params;
+  try {
+    const [rows] = await mainDB.query('SELECT * FROM appointments WHERE nurse_id = ?', [nurseId]);
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch appointments for this nurse' });
+  }
+};
+
 // get appointments by child ID
 const getAppointmentsByChildId = async (req, res) => {
   const { childId } = req.params;
@@ -45,18 +56,22 @@ const getAvailableAppointments = async (req, res) => {
 
 // add new appointment (יצירת תור חדש)
 const addAppointment = async (req, res) => {
-  const { date, type, notes, nurse_name } = req.body;
+  const { nurseId } = req.params;
+  const { appointment_time } = req.body;
+
   try {
     const [result] = await mainDB.query(
-      'INSERT INTO appointments (date, type, notes, nurse_name, status) VALUES (?, ?, ?, ?, "available")',
-      [date, type, notes, nurse_name]
+      'INSERT INTO appointments (nurse_id, appointment_time, status) VALUES (?, ?, "available")',
+      [nurseId, appointment_time]
     );
+
     res.json({ message: 'Appointment created successfully', id: result.insertId });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to add appointment' });
   }
 };
+
 
 // update an appointment (כולל הזמנת תור)
 const updateAppointment = async (req, res) => {
@@ -98,6 +113,7 @@ const deleteAppointment = async (req, res) => {
 module.exports = {
   getAllAppointments,
   getAppointmentById,
+  getAppointmentsByNurseId,
   getAppointmentsByChildId,
   getAvailableAppointments,
   addAppointment,

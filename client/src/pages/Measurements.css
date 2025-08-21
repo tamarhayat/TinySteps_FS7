@@ -8,14 +8,31 @@
   margin-top: 1.5rem;
 }
 
+.btn-add {
+  margin-left: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-submit {
+  text-align: center; /* centers the button horizontally */
+  margin-top: 1rem;   /* optional spacing from above */
+}
+
+.btn-upload {
+  display: inline-flex; /* keeps icon and text aligned */
+  align-items: center;
+  gap: 0.5rem;          /* space between icon and text */
+}
 /* Measurement card */
 .measurement-card {
   background: white;
   border-radius: 0.75rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   border: 2px solid #e5e7eb;
-  padding: 1.5rem;
+  padding: 2rem;
   transition: all 0.3s ease;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .measurement-card:hover {
@@ -95,7 +112,8 @@
 /* גריד עם עמודה אחת */
 .measurements-grid {
   display: grid;
-  grid-template-columns: 1fr; /* תמיד עמודה אחת */
+  grid-template-columns: 1fr;
+  /* תמיד עמודה אחת */
   gap: 1rem;
 }
 
@@ -103,7 +121,7 @@
 .measurement-card {
   background: #ffffff;
   border-radius: 0.75rem;
-  padding: 1.25rem;
+  padding: 1.4rem;
   border: 2px solid #e5e7eb;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
@@ -139,4 +157,11 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+
+.file-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }
