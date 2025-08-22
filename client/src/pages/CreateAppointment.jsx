@@ -7,7 +7,7 @@ import {
   AlertCircle,
   Loader2
 } from "lucide-react";
-import "./CreateAppointment.css"; 
+import "./CreateAppointment.css";
 
 export default function CreateAppointment() {
   const { nurseId } = useParams(); // or pull from logged-in user
@@ -16,6 +16,7 @@ export default function CreateAppointment() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+
 
   const handleCreate = async () => {
     setError("");
@@ -26,7 +27,7 @@ export default function CreateAppointment() {
       return;
     }
 
-    const appointmentDateTime = new Date(`${date}T${time}`);
+    const appointmentDateTime = `${date} ${time}:00`;
 
     setLoading(true);
     try {
@@ -35,7 +36,7 @@ export default function CreateAppointment() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nurse_id: nurseId,
-          appointment_time: appointmentDateTime.toISOString().slice(0, 19).replace('T', ' '),
+          appointment_time: appointmentDateTime,
         }),
       });
 
@@ -77,47 +78,67 @@ export default function CreateAppointment() {
             <p>{error}</p>
           </div>
         )}
+        <div className="form-container">
+          <div className="form-grid">
+            <div className="form-field">
+              <label htmlFor="date"><Calendar className="detail-icon" /> Date</label>
+              <input
+                type="date"
+                id="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+            </div>
 
-        <div className="form-grid">
-          <div className="form-field">
-            <label htmlFor="date"><Calendar className="detail-icon" /> Date</label>
-            <input
-              type="date"
-              id="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-          </div>
+            <div className="form-field">
+              <label htmlFor="time">
+                <Clock className="detail-icon" />Time
+              </label>
+              <div className="select-wrapper">
+                <select
+                  id="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                >
+                  <option value="" disabled>
+                    HH:MM
+                  </option>
+                  {Array.from({ length: (20 - 8) * 4 + 1 }, (_, i) => {
+                    const h = 8 + Math.floor(i / 4);       // hour from 8 to 20
+                    const m = (i % 4) * 15;               // 0, 15, 30, 45
+                    const hourStr = h.toString().padStart(2, "0");
+                    const minStr = m.toString().padStart(2, "0");
+                    return (
+                      <option key={i} value={`${hourStr}:${minStr}`}>
+                        {hourStr}:{minStr}
+                      </option>
+                    );
+                  })}
+                </select>
+                <Clock className="select-icon" />
+              </div>
 
-          <div className="form-field">
-            <label htmlFor="time"><Clock className="detail-icon" /> Time</label>
-            <input
-              type="time"
-              id="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              step="300"
-            />
-          </div>
+            </div>
 
-          <div className="form-actions">
-            <button
-              onClick={handleCreate}
-              className="book-button"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="button-spinner" />
-                  Creating...
-                </>
-              ) : (
-                <>
-                  <CheckCircle className="button-icon" />
-                  Create Appointment
-                </>
-              )}
-            </button>
+            <div className="form-actions">
+              <button
+                onClick={handleCreate}
+                className="book-button"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="button-spinner" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle className="button-icon" />
+                    Create Appointment
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>

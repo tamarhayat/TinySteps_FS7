@@ -26,11 +26,11 @@
 
 /* מצב past/upcoming */
 .appointment-card.past {
-  border-color: #bbf7d0;
-  background-color: #f0fdf4;
+  border-color: #93c5fd;
+  background-color: #eff6ff;
 }
 
 .appointment-card.upcoming {
-  border-color: #93c5fd;
-  background-color: #eff6ff;
+  border-color: #bbf7d0;
+  background-color: #f0fdf4;
 }
