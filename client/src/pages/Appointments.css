@@ -1,6 +1,7 @@
 /* appointments grid*/
 .appointments-grid {
   display: grid;
+  width: 90%;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
   margin-top: 1.5rem;
@@ -15,8 +16,8 @@
   transition: all 0.3s ease;
   padding: 1.25rem;
   text-align: left;
-  width: 100%;      
   box-sizing: border-box;
+
 }
 
 .appointment-card:hover {
