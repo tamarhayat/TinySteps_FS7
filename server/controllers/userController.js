@@ -36,6 +36,7 @@ const getUsersByRole = async (req, res) => {
 const getUserById = async (req, res) => {
   const { id } = req.params;
   try {
+
     const [rows] = await mainDB.query(
       'SELECT id, first_name, last_name, email, role FROM users WHERE id = ?',
       [id]

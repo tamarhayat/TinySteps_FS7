@@ -22,7 +22,7 @@ export default function HomeNurse() {
         </Link>
         <Link to={`/nurse/${nurseId}/appointments/new`} className="link-card">
           <FaPlusCircle className="link-icon" />
-          <span>Create New Appointment</span>
+          <span>Schedule New Appointment</span>
         </Link>
         <Link to={`/nurse/${nurseId}/children`} className="link-card">
           <FaChild className="link-icon" />

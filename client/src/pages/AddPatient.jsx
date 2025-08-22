@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import "./Auth.css";
 import logo from "../assets/logo.png";
 
@@ -10,6 +11,9 @@ export default function AddPatient() {
   const [birthDate, setBirthDate] = useState("");
   const [parentId, setParentId] = useState("");
   const [parents, setParents] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   // Fetch parents list (only users with role=parent)
@@ -21,11 +25,11 @@ export default function AddPatient() {
         if (res.ok) {
           setParents(data);
         } else {
-          alert("Failed to load parents");
+          setError("Failed to load parents");
         }
       } catch (err) {
         console.error(err);
-        alert("Error loading parents");
+        setError("Error loading parents");
       }
     };
     fetchParents();
@@ -33,6 +37,9 @@ export default function AddPatient() {
 
   const handleAddPatient = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess(false);
     try {
       const res = await fetch("http://localhost:3000/api/children", {
         method: "POST",
@@ -42,16 +49,38 @@ export default function AddPatient() {
 
       const data = await res.json();
       if (res.ok) {
-        alert("Patient added successfully");
-        navigate("/nurse/:nurseId/children"); // redirect to patient list
+        setSuccess(true);
+        // Clear form
+        setId("");
+        setName("");
+        setBirthDate("");
+        setParentId("");
+
+        // Navigate after a short delay to show success message
+        setTimeout(() => {
+          navigate("/nurse/:nurseId/children");
+        }, 2000);
       } else {
-        alert(data.error || "Failed to add patient");
+        setError(data.error || "Failed to add patient");
       }
     } catch (err) {
       console.error(err);
-      alert("Error adding patient");
+      setError("Error adding patient");
+    } finally {
+      setLoading(false);
     }
   };
+
+  // Clear messages after 5 seconds
+  useEffect(() => {
+    if (success || error) {
+      const timer = setTimeout(() => {
+        setSuccess("");
+        setError("");
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, error]);
 
   return (
     <div className="auth-wrapper">
@@ -62,6 +91,21 @@ export default function AddPatient() {
         <h2 style={{ marginTop: "5%" }}>
           Add Patient
         </h2>
+
+        {success && (
+          <div className="message success-message">
+            <CheckCircle className="message-icon" />
+            <p>Patient added successfully! Redirecting...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="message error-message">
+            <AlertCircle className="message-icon" />
+            <p>{error}</p>
+          </div>
+        )}
+
         <form onSubmit={handleAddPatient}>
           <select
             value={parentId}

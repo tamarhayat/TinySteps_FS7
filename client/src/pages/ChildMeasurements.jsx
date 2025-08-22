@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import { Loader2, Calendar, Ruler, Weight, Activity, PlusCircle, Upload, Trash2, Edit2 } from "lucide-react";
+import { Loader2, Calendar, Ruler, Weight, Activity, PlusCircle, Upload, Trash2, Edit2, CheckCircle, AlertCircle } from "lucide-react";
 import "./Measurements.css";
 
 export default function ChildMeasurements() {
@@ -12,7 +12,8 @@ export default function ChildMeasurements() {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const location = useLocation();
   const from = location.state?.from;
@@ -27,6 +28,7 @@ export default function ChildMeasurements() {
       setMeasurements(data);
     } catch (err) {
       console.error(err);
+      setError("Failed to load measurements");
     } finally {
       setLoading(false);
     }
@@ -39,6 +41,8 @@ export default function ChildMeasurements() {
   const handleSubmitMeasurement = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+    setError("");
+    setSuccess("");
 
     try {
       const today = new Date().toISOString().split("T")[0];
@@ -66,11 +70,13 @@ export default function ChildMeasurements() {
       setWeight("");
       setHeight("");
       setShowMeasurementForm(false);
+      setSuccess("Measurement saved successfully!");
+
 
       fetchMeasurements();
     } catch (err) {
       console.error(err);
-      alert("Error saving measurement.");
+      setError("Error saving measurement. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -78,6 +84,9 @@ export default function ChildMeasurements() {
 
   const handleDeleteMeasurement = async (id) => {
     if (!window.confirm("Are you sure you want to delete this measurement?")) return;
+
+    setError("");
+    setSuccess("");
 
     try {
       const res = await fetch(`http://localhost:3000/api/measurements/${id}`, {
@@ -87,10 +96,10 @@ export default function ChildMeasurements() {
       if (!res.ok) throw new Error("Delete failed");
 
       setMeasurements((prev) => prev.filter((m) => m.id !== id));
-      alert("Measurement deleted successfully");
+      setSuccess("Measurement deleted successfully!");
     } catch (err) {
       console.error(err);
-      alert("Failed to delete measurement");
+      setError("Failed to delete measurement. Please try again.");
     }
   };
 
@@ -99,6 +108,9 @@ export default function ChildMeasurements() {
     const newHeight = prompt("Enter new height (cm):");
 
     if (!newWeight || !newHeight) return;
+
+    setError("");
+    setSuccess("");
 
     try {
       const res = await fetch(`http://localhost:3000/api/measurements/${id}`, {
@@ -116,13 +128,23 @@ export default function ChildMeasurements() {
       setMeasurements((prev) =>
         prev.map((m) => (m.id === id ? updated.measurement : m))
       );
-      alert("Measurement updated successfully");
+      setSuccess("Measurement updated successfully!");
     } catch (err) {
       console.error(err);
-      alert("Failed to update measurement");
+      setError("Failed to update measurement. Please try again.");
     }
   };
 
+  // Clear messages after 5 seconds
+  useEffect(() => {
+    if (success || error) {
+      const timer = setTimeout(() => {
+        setSuccess("");
+        setError("");
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, error]);
 
   if (loading) {
     return (
@@ -143,6 +165,20 @@ export default function ChildMeasurements() {
             <h1 className="main-title">🍼 My measurement</h1>
             <div className="divider"></div>
           </div>
+          {/* Success and Error Messages */}
+          {success && (
+            <div className="message success-message">
+              <CheckCircle className="message-icon" />
+              <p>{success}</p>
+            </div>
+          )}
+
+          {error && (
+            <div className="message error-message">
+              <AlertCircle className="message-icon" />
+              <p>{error}</p>
+            </div>
+          )}
 
           <div className="no-appointments">
             <Ruler className="no-appointments-icon" />
@@ -162,6 +198,22 @@ export default function ChildMeasurements() {
           <h1 className="main-title"> My measurements 🍼</h1>
           <div className="divider"></div>
         </div>
+
+        {/* Success and Error Messages */}
+        {success && (
+          <div className="message success-message">
+            <CheckCircle className="message-icon" />
+            <p>{success}</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="message error-message">
+            <AlertCircle className="message-icon" />
+            <p>{error}</p>
+          </div>
+        )}
+        
         {/* navigated from nurse */}
         {from === "nurse" && (
           <div className="add-measurement-section">

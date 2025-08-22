@@ -43,16 +43,23 @@ const getAppointmentsByChildId = async (req, res) => {
   }
 };
 
-// get available appointments
+// get available appointments that there date did not pass
 const getAvailableAppointments = async (req, res) => {
   try {
-    const [rows] = await mainDB.query('SELECT * FROM appointments WHERE status = "available" ORDER BY appointment_time ASC');
+    const [rows] = await mainDB.query(`
+      SELECT * 
+      FROM appointments 
+      WHERE status = "available" 
+        AND appointment_time >= NOW()
+      ORDER BY appointment_time ASC
+    `);
     res.json(rows);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch available appointments' });
   }
 };
+
 
 // add new appointment (יצירת תור חדש)
 const addAppointment = async (req, res) => {

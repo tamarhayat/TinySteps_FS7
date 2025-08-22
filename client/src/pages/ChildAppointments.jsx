@@ -19,8 +19,9 @@ export default function ChildAppointments() {
         const appointmentsWithNurse = await Promise.all(
           data.map(async (a) => {
             try {
-              const resNurse = await fetch(`http://localhost:3000/api/users/${Number(a.nurse_id)}`);
+              const resNurse = await fetch(`http://localhost:3000/api/users/nurse/${a.nurse_id}`);
               const nurse = await resNurse.json();
+
               return {
                 ...a,
                 nurse_name: `${nurse.first_name} ${nurse.last_name}`,
