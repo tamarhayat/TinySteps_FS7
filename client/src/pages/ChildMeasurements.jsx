@@ -23,7 +23,7 @@ export default function ChildMeasurements() {
       const res = await fetch(`http://localhost:3000/api/measurements/child/${childId}`);
       if (!res.ok) throw new Error("Failed to fetch measurements");
       const data = await res.json();
-        data.sort((a, b) => new Date(b.date) - new Date(a.date));
+      data.sort((a, b) => new Date(b.date) - new Date(a.date));
       setMeasurements(data);
     } catch (err) {
       console.error(err);
@@ -199,7 +199,7 @@ export default function ChildMeasurements() {
                       placeholder="Weight (kg)"
                       value={weight}
                       onChange={(e) => setWeight(e.target.value)}
-                      className="input-text"
+                      className="input-measurement-text"
                       required
                       min="0"
                       step="0.01"
@@ -212,7 +212,7 @@ export default function ChildMeasurements() {
                       placeholder="Height (cm)"
                       value={height}
                       onChange={(e) => setHeight(e.target.value)}
-                      className="input-text"
+                      className="input-measurement-text"
                       required
                       min="0"
                       step="0.01"
@@ -221,7 +221,7 @@ export default function ChildMeasurements() {
                 </div>
 
                 <div className="form-submit">
-                  <button type="submit" disabled={submitting} className="btn-upload">
+                  <button type="submit" disabled={submitting} className="btn-save">
                     <Upload />
                     {submitting ? "Saving..." : "Save Measurement"}
                   </button>
@@ -236,38 +236,38 @@ export default function ChildMeasurements() {
         {/* Measurements Grid */}
         <div className="measurements-grid">
           {measurements.map((m) => {
-  const measurementDate = new Date(m.date);
+            const measurementDate = new Date(m.date);
 
-  // שליפת הילד מה-LS
-  // const selectedChild = JSON.parse(localStorage.getItem("selectedChild"));
-  // const birthDate = new Date(selectedChild.birth_date);
+            // שליפת הילד מה-LS
+            // const selectedChild = JSON.parse(localStorage.getItem("selectedChild"));
+            // const birthDate = new Date(selectedChild.birth_date);
 
-  // // חישוב גיל בעת המדידה
-  // const ageDiff = measurementDate - birthDate;
-  // const ageDate = new Date(ageDiff);
+            // // חישוב גיל בעת המדידה
+            // const ageDiff = measurementDate - birthDate;
+            // const ageDate = new Date(ageDiff);
 
-  // const years = ageDate.getUTCFullYear() - 1970;
-  // const months = ageDate.getUTCMonth();
-  // const days = ageDate.getUTCDate() - 1;
+            // const years = ageDate.getUTCFullYear() - 1970;
+            // const months = ageDate.getUTCMonth();
+            // const days = ageDate.getUTCDate() - 1;
 
-  return (
-    <div key={`measurement-${m.id}`} className="measurement-card">
-      <div className="measurement-header">
-        <div className="measurement-icon">
-          <Activity className="icon" />
-        </div>
-        <div>
-          <h3 className="measurement-title">Measurement Record</h3>
-          <p className="measurement-date">
-            <Calendar className="detail-icon" />
-            {measurementDate.toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </p>
-          {/* <p className="measurement-age">
+            return (
+              <div key={`measurement-${m.id}`} className="measurement-card">
+                <div className="measurement-header">
+                  <div className="measurement-icon">
+                    <Activity className="icon" />
+                  </div>
+                  <div>
+                    <h3 className="measurement-title">Measurement Record</h3>
+                    <p className="measurement-date">
+                      <Calendar className="detail-icon" />
+                      {measurementDate.toLocaleDateString("en-US", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </p>
+                    {/* <p className="measurement-age">
             Age:{" "}
             {years > 0
               ? `${years} years ${months} months`
@@ -275,19 +275,19 @@ export default function ChildMeasurements() {
               ? `${months}month ${days}days`
               : `${days}days`}
           </p> */}
-        </div>
-      </div>
+                  </div>
+                </div>
 
-      <div className="measurement-details">
-        <div className="detail-item">
-          <Weight className="detail-icon" />
-          <span>Weight: {parseFloat(m.weight_kg).toFixed(2)} kg</span>
-        </div>
-        <div className="detail-item">
-          <Ruler className="detail-icon" />
-          <span>Height: {parseFloat(m.height_cm).toFixed(2)} cm</span>
-        </div>
-      </div>
+                <div className="measurement-details">
+                  <div className="detail-item">
+                    <Weight className="detail-icon" />
+                    <span>Weight: {parseFloat(m.weight_kg).toFixed(2)} kg</span>
+                  </div>
+                  <div className="detail-item">
+                    <Ruler className="detail-icon" />
+                    <span>Height: {parseFloat(m.height_cm).toFixed(2)} cm</span>
+                  </div>
+                </div>
 
                 {/* Nurse-only actions */}
                 {from === "nurse" && (
@@ -306,9 +306,9 @@ export default function ChildMeasurements() {
                   </div>
                 )}
 
-    </div>
-  );
-})}
+              </div>
+            );
+          })}
 
         </div>
       </div>

@@ -72,7 +72,7 @@
 /* Upload form */
 .upload-form {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 1rem;
   margin-bottom: 2rem;
   background: white;
