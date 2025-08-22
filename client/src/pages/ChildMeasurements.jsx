@@ -239,16 +239,16 @@ export default function ChildMeasurements() {
   const measurementDate = new Date(m.date);
 
   // שליפת הילד מה-LS
-  const selectedChild = JSON.parse(localStorage.getItem("selectedChild"));
-  const birthDate = new Date(selectedChild.birth_date);
+  // const selectedChild = JSON.parse(localStorage.getItem("selectedChild"));
+  // const birthDate = new Date(selectedChild.birth_date);
 
-  // חישוב גיל בעת המדידה
-  const ageDiff = measurementDate - birthDate;
-  const ageDate = new Date(ageDiff);
+  // // חישוב גיל בעת המדידה
+  // const ageDiff = measurementDate - birthDate;
+  // const ageDate = new Date(ageDiff);
 
-  const years = ageDate.getUTCFullYear() - 1970;
-  const months = ageDate.getUTCMonth();
-  const days = ageDate.getUTCDate() - 1;
+  // const years = ageDate.getUTCFullYear() - 1970;
+  // const months = ageDate.getUTCMonth();
+  // const days = ageDate.getUTCDate() - 1;
 
   return (
     <div key={`measurement-${m.id}`} className="measurement-card">
@@ -267,14 +267,14 @@ export default function ChildMeasurements() {
               day: "numeric",
             })}
           </p>
-          <p className="measurement-age">
+          {/* <p className="measurement-age">
             Age:{" "}
             {years > 0
               ? `${years} years ${months} months`
               : months > 0
               ? `${months}month ${days}days`
               : `${days}days`}
-          </p>
+          </p> */}
         </div>
       </div>
 
