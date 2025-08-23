@@ -1,33 +1,110 @@
-@import "./BookAppointments.css";
-
 /* Grid */
-.measurements-grid {
+.measurements-grid  {
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 1.5rem;
   margin-top: 1.5rem;
 }
 
-/* Measurement card */
-.measurement-card {
-  background: white;
+.add-measurement-section {
+  width: 100%;
+}
+
+.btn-add {
+  margin-bottom: 1.5rem;
+
+}
+
+.btn-save {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  justify-content: center;
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
   border-radius: 0.75rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-save:hover:not(:disabled) {
+  background: #059669;
+}
+
+.btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-submit {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+
+/* Measurement card */
+.measurement-card,
+.measurement-form {
+  background: #ffffff;
+  border-radius: 0.75rem;
+  padding: 1.4rem;
   border: 2px solid #e5e7eb;
-  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
 
-.measurement-card:hover {
-  transform: translateY(-2px);
+.measurement-card:hover,
+.measurement-form:hover {
+  transform: translateY(-3px);
   border-color: #93c5fd;
 }
+
 
 /* Header */
 .measurement-header {
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.measurement-title {
+  font-weight: bold;
+  font-size: 1.125rem;
+  color: #1f2937;
+  margin: 0;
+}
+
+.measurement-date {
+  font-weight: 600;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  margin-top: 0.4rem;
+}
+
+
+/* body */
+.measurement-body p {
+  margin: 0.4rem 0;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* icons */
+.file-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }
 
 .measurement-icon {
@@ -43,27 +120,12 @@
   color: #2563eb;
 }
 
-.measurement-title {
-  font-weight: bold;
-  font-size: 1.125rem;
-  color: #1f2937;
-  margin: 0;
-}
-
-.measurement-date {
-  font-size: 0.875rem;
-  color: #6b7280;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin: 0;
-}
-
 /* Details */
 .measurement-details {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  width: 100%;
 }
 
 .detail-item {
@@ -71,6 +133,14 @@
   align-items: center;
   color: #374151;
   font-weight: 500;
+}
+
+.input-measurement-text {
+  flex: 2 1 auto;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  box-sizing: border-box;
 }
 
 .detail-icon {
@@ -96,51 +166,3 @@
   font-weight: 600;
 }
 
-.measurements-grid {
-  width: 80%;
-  display: grid;
-  grid-template-columns: 1fr; 
-  gap: 1rem;
-}
-
-/* כרטיסיות מדידה */
-.measurement-card {
-  background: #ffffff;
-  border-radius: 0.75rem;
-  padding: 1.25rem;
-  border: 2px solid #e5e7eb;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-}
-
-.measurement-card:hover {
-  transform: translateY(-3px);
-  border-color: #93c5fd;
-}
-
-/* כותרת כרטיס */
-.measurement-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 0.5rem;
-}
-
-.measurement-date {
-  font-weight: 600;
-  color: #2563eb;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* גוף הכרטיס */
-.measurement-body p {
-  margin: 0.4rem 0;
-  color: #374151;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}

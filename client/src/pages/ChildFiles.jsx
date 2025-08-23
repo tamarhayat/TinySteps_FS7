@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Upload, FileText, Download, Eye, Trash2, PlusCircle,CircleX  } from "lucide-react";
+import { Upload, FileText, Download, Eye, Trash2, PlusCircle, CircleX } from "lucide-react";
 import "./Files.css";
-import Message from "../components/Message";  
+import Message from "../components/Message";
 
 export default function ChildFiles() {
   const { childId } = useParams();
@@ -33,7 +33,7 @@ export default function ChildFiles() {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    if (!file) return setError("Please select a file to upload.")&& setSuccess("");
+    if (!file) return setError("Please select a file to upload.") && setSuccess("");
 
     const currentUser = JSON.parse(localStorage.getItem("user"));
     const userId = currentUser?.id;
@@ -92,12 +92,12 @@ export default function ChildFiles() {
 
   return (
     <div className="files-container">
-      <div className="files-header">
-        <h2 className="files-title">
-          <FileText className="icon-blue" /> Files for Child {childId}
-        </h2>
-        <button className="btn-add" onClick={() => {setShowForm(!showForm);setError(""); setSuccess("");}}>
-          {showForm ? <CircleX  />: <PlusCircle />} {showForm ? "Cancel" : "Add File"}
+      <div className="header">
+        <h1 className="main-title">Files 📄</h1>
+        <h2 className="subtitle">For Child: {childId}</h2>
+        <div className="divider"></div>
+        <button className="btn-add" onClick={() => { setShowForm(!showForm); setError(""); setSuccess(""); }}>
+          {showForm ? <CircleX /> : <PlusCircle />} {showForm ? "Cancel" : "Add File"}
         </button>
       </div>
       {error && <Message type="error" text={error} />}
@@ -105,34 +105,36 @@ export default function ChildFiles() {
       {showForm && (
         <form className="upload-form" onSubmit={handleUpload}>
           <input
-  type="file"
-  onChange={(e) => {
-        const selectedFile = e.target.files[0];
-        if (!selectedFile) return;
+            type="file"
+            onChange={(e) => {
+              const selectedFile = e.target.files[0];
+              if (!selectedFile) return;
 
-        const allowedTypes = ["application/pdf", "image/png", "image/jpeg"];
-        if (!allowedTypes.includes(selectedFile.type)) {
-          setError("Only PDF or image files are allowed.");
-          setFile(null);
-          return;
-        }
+              const allowedTypes = ["application/pdf", "image/png", "image/jpeg"];
+              if (!allowedTypes.includes(selectedFile.type)) {
+                setError("Only PDF or image files are allowed.");
+                setFile(null);
+                return;
+              }
 
-        setFile(selectedFile);
-        setError("");
-      }}
-        className="input-file"
-        />
-
-          <input
-            type="text"
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="input-text"
+              setFile(selectedFile);
+              setError("");
+            }}
+            className="input-file"
           />
-          <button type="submit" disabled={uploading} className="btn-upload">
-            <Upload /> {uploading ? "Uploading..." : "Upload"}
-          </button>
+
+            <input
+              type="text"
+              placeholder="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="input-text"
+            />
+            <button type="submit" disabled={uploading} className="btn-upload">
+              <Upload /> {uploading ? "Uploading..." : "Upload"}
+            </button>
+
+
         </form>
       )}
 

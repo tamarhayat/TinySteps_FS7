@@ -40,21 +40,21 @@ export default function HomeChild() {
         <div className="divider"></div>
       </div>
 
-      <div className="child-links">
-        <Link to={`/child/${childId}/files`} className="child-link-card">
-          <FaFileAlt className="child-link-icon" />
+      <div className="links">
+        <Link to={`/child/${childId}/files`} className="link-card">
+          <FaFileAlt className="link-icon" />
           <span>Uploaded Files</span>
         </Link>
-        <Link to={`/child/${childId}/appointments`} className="child-link-card">
-          <FaCalendarAlt className="child-link-icon" />
+        <Link to={`/child/${childId}/appointments`} className="link-card">
+          <FaCalendarAlt className="link-icon" />
           <span>Upcoming Appointments</span>
         </Link>
-        <Link to={`/child/${childId}/appointments/new`} className="child-link-card">
-          <FaPlusCircle className="child-link-icon" />
+        <Link to={`/child/${childId}/appointments/new`} className="link-card">
+          <FaPlusCircle className="link-icon" />
           <span>Book New Appointment</span>
         </Link>
-        <Link to={`/child/${childId}/measurements`} className="child-link-card">
-          <FaRuler className="child-link-icon" />
+        <Link to={`/child/${childId}/measurements`} className="link-card">
+          <FaRuler className="link-icon" />
           <span>Measurements</span>
         </Link>
       </div>

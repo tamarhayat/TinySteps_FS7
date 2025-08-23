@@ -1,0 +1,38 @@
+
+
+
+.action-button {
+  flex: 1;
+  background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
+  color: white;
+  margin-top: 1rem;
+  padding: 0.75rem 1.3rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  min-width: 150px;
+  text-align: center;
+  text-decoration: none; /* removes underline */
+  outline: none;
+  appearance: none;
+}
+
+.action-button:hover {
+  background: linear-gradient(90deg, #2563eb 0%, #4f46e5 100%);
+  transform: scale(1.02);
+}
+
+.action-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+
+

@@ -143,24 +143,26 @@
 
 
 
-/* Child page */
-.home-child-page {
+/* Child and Nurse page */
+.home-child-page,
+.home-Nurse-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
   padding: 2rem 1rem;
 }
 
 /* Links grid */
-.child-links {
+.links {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
   max-width: 800px;
   margin: 2rem auto;
+  padding: 0 2rem;
 }
 
 /* Link card */
-.child-link-card {
+.link-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -175,14 +177,14 @@
   transition: all 0.3s ease;
 }
 
-.child-link-card:hover {
+.link-card:hover {
   transform: translateY(-3px);
   border-color: #93c5fd;
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Icon inside link */
-.child-link-icon {
+.link-icon {
   font-size: 2rem;
   color: #3b82f6;
   margin-bottom: 0.75rem;

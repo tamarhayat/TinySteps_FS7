@@ -9,7 +9,8 @@ const {
   deleteChild
 } = require('../controllers/childController');
 
-router.get('/', getAllChildren);
+
+router.get('/nurse/:nurseId', getAllChildren);
 router.get('/parent/:parentId', getChildrenByParentId);
 router.get('/:id', getChildById);
 

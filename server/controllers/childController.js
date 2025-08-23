@@ -42,6 +42,12 @@ const getChildrenByParentId = async (req, res) => {
 const addChild = async (req, res) => {
     const { id, name, birth_date, parent_id } = req.body;
     try {
+
+        const [existing] = await mainDB.query('SELECT id FROM children WHERE id = ?', [id]);
+        if (existing.length > 0) {
+            return res.status(400).json({ error: 'Child with this ID already exists' });
+        }
+
         await mainDB.query(
             'INSERT INTO children (id, name, birth_date, parent_id) VALUES (?, ?, ?, ?)',
             [id, name, birth_date, parent_id]
