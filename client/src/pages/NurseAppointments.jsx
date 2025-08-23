@@ -25,7 +25,12 @@ export default function NurseAppointments() {
         if (!res.ok) throw new Error("Failed to fetch appointments");
         const data = await res.json();
 
-        setAppointments(data);
+        // Sort appointments by appointment_time (ascending)
+        const sortedAppointments = data.sort(
+          (a, b) => new Date(a.appointment_time) - new Date(b.appointment_time)
+        );
+
+        setAppointments(sortedAppointments);
       } catch (err) {
         console.error(err);
         setError("Failed to fetch appointments. Please try again later.");
@@ -80,66 +85,66 @@ export default function NurseAppointments() {
               const isPast = appointmentDate < new Date();
 
 
-                return (
-                  <div
-                    key={a.id}
-                    className={`appointment-card ${isPast ? "past" : "upcoming"}`}
-                  >
-                    <div className="appointment-header">
-                      <div className="appointment-icon">
-                        {a.status === "booked" ? (
-                          <CheckCircle className="icon" />
-                        ) : (
-                          <Calendar className="icon" />
-                        )}
-                      </div>
-                      <div className="appointment-title">
-                        <h3>
-                          {a.status === "booked"
-                            ? "Booked"
-                            : "Available"}
-                        </h3>
-                        <p className="appointment-id">Appointment #{a.id}</p>
-                      </div>
+              return (
+                <div
+                  key={a.id}
+                  className={`appointment-card ${isPast ? "past" : "upcoming"}`}
+                >
+                  <div className="appointment-header">
+                    <div className="appointment-icon">
+                      {a.status === "booked" ? (
+                        <CheckCircle className="icon" />
+                      ) : (
+                        <Calendar className="icon" />
+                      )}
                     </div>
-
-                    <div className="appointment-details">
-                      <div className="detail-item">
-                        <Calendar className="detail-icon" />
-                        <span>
-                          {appointmentDate.toLocaleDateString("en-US", {
-                            weekday: "long",
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
-                        </span>
-                      </div>
-
-                      <div className="detail-item">
-                        <Clock className="detail-icon" />
-                        <span>
-                          {appointmentDate.toLocaleTimeString("en-US", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hour12: true,
-                          })}
-                        </span>
-                      </div>
-
-                      <div className="detail-item">
-                        <User className="detail-icon" />
-                        <span>Child ID: {a.child_id}</span>
-                      </div>
-
-                      <div className="detail-item">
-                        <AlertCircle className="detail-icon" />
-                        <span>Status: {a.status}</span>
-                      </div>
+                    <div className="appointment-title">
+                      <h3>
+                        {a.status === "booked"
+                          ? "Booked"
+                          : "Available"}
+                      </h3>
+                      <p className="appointment-id">Appointment #{a.id}</p>
                     </div>
                   </div>
-                );
-              })}
+
+                  <div className="appointment-details">
+                    <div className="detail-item">
+                      <Calendar className="detail-icon" />
+                      <span>
+                        {appointmentDate.toLocaleDateString("en-US", {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </span>
+                    </div>
+
+                    <div className="detail-item">
+                      <Clock className="detail-icon" />
+                      <span>
+                        {appointmentDate.toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })}
+                      </span>
+                    </div>
+
+                    <div className="detail-item">
+                      <User className="detail-icon" />
+                      <span>Child ID: {a.child_id}</span>
+                    </div>
+
+                    <div className="detail-item">
+                      <AlertCircle className="detail-icon" />
+                      <span>Status: {a.status}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

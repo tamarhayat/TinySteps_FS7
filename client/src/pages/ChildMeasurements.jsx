@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import { Loader2, Calendar, Ruler, Weight, Activity, PlusCircle, Upload, Trash2, Edit2, CheckCircle, AlertCircle } from "lucide-react";
+import { Loader2, Calendar, User2, Ruler, Weight, Activity, PlusCircle, Upload, Trash2, Edit2, CheckCircle, AlertCircle } from "lucide-react";
 import "./Measurements.css";
 
 export default function ChildMeasurements() {
   const { childId } = useParams();
   const [measurements, setMeasurements] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedChild, setSelectedChild] = useState(null);
+
 
   const [showMeasurementForm, setShowMeasurementForm] = useState(false);
   const [weight, setWeight] = useState("");
@@ -33,6 +35,27 @@ export default function ChildMeasurements() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchChild = async () => {
+      try {
+        if (from === "nurse") {
+          const res = await fetch(`http://localhost:3000/api/children/${childId}`);
+          if (!res.ok) throw new Error("Failed to fetch child");
+          const data = await res.json();
+          setSelectedChild(data);
+        } else {
+          const child = JSON.parse(localStorage.getItem("selectedChild"));
+          setSelectedChild(child);
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load child info");
+      }
+    };
+
+    fetchChild();
+  }, [childId, from]);
 
   useEffect(() => {
     fetchMeasurements();
@@ -103,37 +126,37 @@ export default function ChildMeasurements() {
     }
   };
 
-  const handleUpdateMeasurement = async (id) => {
-    const newWeight = prompt("Enter new weight (kg):");
-    const newHeight = prompt("Enter new height (cm):");
+  // const handleUpdateMeasurement = async (id) => {
+  //   const newWeight = prompt("Enter new weight (kg):");
+  //   const newHeight = prompt("Enter new height (cm):");
 
-    if (!newWeight || !newHeight) return;
+  //   if (!newWeight || !newHeight) return;
 
-    setError("");
-    setSuccess("");
+  //   setError("");
+  //   setSuccess("");
 
-    try {
-      const res = await fetch(`http://localhost:3000/api/measurements/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          weight_kg: parseFloat(newWeight),
-          height_cm: parseFloat(newHeight),
-        }),
-      });
+  //   try {
+  //     const res = await fetch(`http://localhost:3000/api/measurements/${id}`, {
+  //       method: "PUT",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         weight_kg: parseFloat(newWeight),
+  //         height_cm: parseFloat(newHeight),
+  //       }),
+  //     });
 
-      if (!res.ok) throw new Error("Update failed");
+  //     if (!res.ok) throw new Error("Update failed");
 
-      const updated = await res.json();
-      setMeasurements((prev) =>
-        prev.map((m) => (m.id === id ? updated.measurement : m))
-      );
-      setSuccess("Measurement updated successfully!");
-    } catch (err) {
-      console.error(err);
-      setError("Failed to update measurement. Please try again.");
-    }
-  };
+  //     const updated = await res.json();
+  //     setMeasurements((prev) =>
+  //       prev.map((m) => (m.id === id ? updated.measurement : m))
+  //     );
+  //     setSuccess("Measurement updated successfully!");
+  //   } catch (err) {
+  //     console.error(err);
+  //     setError("Failed to update measurement. Please try again.");
+  //   }
+  // };
 
   // Clear messages after 5 seconds
   useEffect(() => {
@@ -213,7 +236,7 @@ export default function ChildMeasurements() {
             <p>{error}</p>
           </div>
         )}
-        
+
         {/* navigated from nurse */}
         {from === "nurse" && (
           <div className="add-measurement-section">
@@ -290,17 +313,16 @@ export default function ChildMeasurements() {
           {measurements.map((m) => {
             const measurementDate = new Date(m.date);
 
-            // שליפת הילד מה-LS
-            // const selectedChild = JSON.parse(localStorage.getItem("selectedChild"));
-            // const birthDate = new Date(selectedChild.birth_date);
+            if (!selectedChild) return null;
+            const birthDate = new Date(selectedChild.birth_date);
 
-            // // חישוב גיל בעת המדידה
-            // const ageDiff = measurementDate - birthDate;
-            // const ageDate = new Date(ageDiff);
+            // חישוב גיל בעת המדידה
+            const ageDiff = measurementDate - birthDate;
+            const ageDate = new Date(ageDiff);
 
-            // const years = ageDate.getUTCFullYear() - 1970;
-            // const months = ageDate.getUTCMonth();
-            // const days = ageDate.getUTCDate() - 1;
+            const years = ageDate.getUTCFullYear() - 1970;
+            const months = ageDate.getUTCMonth();
+            const days = ageDate.getUTCDate() - 1;
 
             return (
               <div key={`measurement-${m.id}`} className="measurement-card">
@@ -319,18 +341,21 @@ export default function ChildMeasurements() {
                         day: "numeric",
                       })}
                     </p>
-                    {/* <p className="measurement-age">
-            Age:{" "}
-            {years > 0
-              ? `${years} years ${months} months`
-              : months > 0
-              ? `${months}month ${days}days`
-              : `${days}days`}
-          </p> */}
                   </div>
                 </div>
 
                 <div className="measurement-details">
+                  <div className="detail-item">
+                    <User2 className="detail-icon" />
+                    <span>
+                      Age:{" "}
+                      {years > 0
+                        ? `${years} years ${months} months`
+                        : months > 0
+                          ? `${months} month ${days} days`
+                          : `${days} days`}
+                    </span>
+                  </div>
                   <div className="detail-item">
                     <Weight className="detail-icon" />
                     <span>Weight: {parseFloat(m.weight_kg).toFixed(2)} kg</span>
@@ -342,21 +367,23 @@ export default function ChildMeasurements() {
                 </div>
 
                 {/* Nurse-only actions */}
-                {from === "nurse" && (
-                  <div className="file-actions">
-                    {/* <button
+                {
+                  from === "nurse" && (
+                    <div className="file-actions">
+                      {/* <button
                       onClick={() => handleUpdateMeasurement(m.id)}
                     >
                       <Edit2 /> Update
                     </button> */}
 
-                    <button
-                      onClick={() => handleDeleteMeasurement(m.id)}
-                    >
-                      <Trash2 /> Delete
-                    </button>
-                  </div>
-                )}
+                      <button
+                        onClick={() => handleDeleteMeasurement(m.id)}
+                      >
+                        <Trash2 /> Delete
+                      </button>
+                    </div>
+                  )
+                }
 
               </div>
             );
@@ -364,6 +391,6 @@ export default function ChildMeasurements() {
 
         </div>
       </div>
-    </div>
+    </div >
   );
 }
