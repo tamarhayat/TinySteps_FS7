@@ -31,7 +31,6 @@ export default function ChildAppointments() {
             }
           })
         );
-
         setAppointments(appointmentsWithNurse);
       } catch (err) {
         console.error(err);

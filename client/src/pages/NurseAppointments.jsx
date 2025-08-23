@@ -24,9 +24,13 @@ export default function NurseAppointments() {
         );
         if (!res.ok) throw new Error("Failed to fetch appointments");
         const data = await res.json();
+        const now = new Date();
 
+        const upcomingAppointments = data.filter(
+        (appointment) => new Date(appointment.appointment_time) >= now
+        );
         // Sort appointments by appointment_time (ascending)
-        const sortedAppointments = data.sort(
+        const sortedAppointments = upcomingAppointments.sort(
           (a, b) => new Date(a.appointment_time) - new Date(b.appointment_time)
         );
 

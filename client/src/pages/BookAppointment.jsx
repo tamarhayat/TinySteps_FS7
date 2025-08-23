@@ -24,8 +24,17 @@ export default function BookAppointment() {
         nursesData.map(n => [n.id, `${n.first_name} ${n.last_name}`])
       );
       setNurseMap(map);
+      const now = new Date();
 
-      setAppointments(appointmentsData);
+    const upcomingAppointments = appointmentsData.filter(
+      (appointment) => new Date(appointment.appointment_time) >= now
+    );
+
+    const sortedAppointments = upcomingAppointments.sort(
+      (a, b) => new Date(a.appointment_time) - new Date(b.appointment_time)
+    );
+
+      setAppointments(sortedAppointments);
     } catch (err) {
       console.error(err);
       setError("Failed to fetch available appointments");

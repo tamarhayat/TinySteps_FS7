@@ -5,7 +5,6 @@ import "./home.css";
 export default function HomeChild() {
   const { childId } = useParams();
 
-  // שליפת הילד הנבחר מ-LS
   const selectedChild = JSON.parse(localStorage.getItem("selectedChild"));
 
   if (!selectedChild || selectedChild.id !== childId) {
@@ -16,16 +15,6 @@ export default function HomeChild() {
       </div>
     );
   }
-
-  // פונקציה לעיצוב תאריך לידה יפה
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("he-IL", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
 
   return (
     <div className="home-child-page">
@@ -47,7 +36,7 @@ export default function HomeChild() {
         </Link>
         <Link to={`/child/${childId}/appointments`} className="link-card">
           <FaCalendarAlt className="link-icon" />
-          <span>Upcoming Appointments</span>
+          <span>My Appointments</span>
         </Link>
         <Link to={`/child/${childId}/appointments/new`} className="link-card">
           <FaPlusCircle className="link-icon" />
