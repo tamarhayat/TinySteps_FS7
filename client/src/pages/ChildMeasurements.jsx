@@ -86,17 +86,15 @@ export default function ChildMeasurements() {
 
       if (!res.ok) throw new Error("Failed to save measurement");
 
-      // const newMeasurement = await res.json();
-      // setMeasurements((prev) => [newMeasurement, ...prev]); // update list
+      const newMeasurement = await res.json();
+      console.log(newMeasurement);
+      setMeasurements((prev) => [newMeasurement.measurement, ...prev]); // update list
 
       // Reset form
       setWeight("");
       setHeight("");
       setShowMeasurementForm(false);
       setSuccess("Measurement saved successfully!");
-
-
-      fetchMeasurements();
     } catch (err) {
       console.error(err);
       setError("Error saving measurement. Please try again.");

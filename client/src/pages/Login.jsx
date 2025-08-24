@@ -67,8 +67,8 @@ export default function Login({ setUser ,setChildren, setSelectedChild}) {
       </div>
       <div className="auth-container">
         <h2>Login</h2>
-        <Message type="success" text={success} />
-        <Message type="error" text={error} />
+        <Message className="message" type="success" text={success} />
+        <Message className="message" type="error" text={error} />
         <form onSubmit={handleLogin}>
           <input
             type="text"

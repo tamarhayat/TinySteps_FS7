@@ -1,4 +1,3 @@
-/* appointments grid*/
 .appointments-grid {
   display: grid;
   width: 90%;
@@ -7,8 +6,9 @@
   margin-top: 1.5rem;
 }
 
+
 /* cards*/
-.appointment-card {
+.appointments-card {
   background: white;
   border-radius: 0.75rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -17,21 +17,52 @@
   padding: 1.25rem;
   text-align: left;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 
 }
 
-.appointment-card:hover {
+.appointments-card:hover {
   transform: translateY(-2px);
   border-color: #93c5fd;
 }
 
 /* מצב past/upcoming */
-.appointment-card.past {
+.appointments-card.past {
   border-color: #93c5fd;
   background-color: #eff6ff;
 }
 
-.appointment-card.upcoming {
+.appointments-card.upcoming {
   border-color: #bbf7d0;
   background-color: #f0fdf4;
+}
+
+
+/* Actions */
+.appointments-actions {
+  display: flex;
+  gap: 1rem;
+  color: #3b82f6;
+  font-weight: 500;
+  margin-left: auto;
+  margin-top: 1rem;       
+  align-self: flex-end;  
+}
+
+.appointments-actions a,
+.appointments-actions button {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+.appointments-actions a:hover,
+.appointments-actions button:hover {
+  text-decoration: underline;
 }

@@ -11,6 +11,19 @@
   border-radius: 10px;
   background: transparent;
 }
+.message.error-message {
+  width: 90%;
+  max-width: 400px;
+}
+.message.success-message {
+  width: 90%;
+  max-width: 400px;
+}
+.message.info-message {
+  width: 90%;
+  max-width: 400px;
+}
+
 
 /* Title */
 .auth-container h2 {
@@ -143,4 +156,52 @@
 }
 .modal button {
   margin-right: 0.5rem;
+}
+
+
+.auth-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10%;
+}
+
+/* התאמה למסכים קטנים */
+@media (max-width: 768px) {
+  .auth-wrapper {
+    flex-direction: column; /* הלוגו מעל הטופס */
+    gap: 2rem;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .logo-container {
+    max-width: 70%; /* שהלוגו לא ייצא גדול מדי */
+  }
+
+  .auth-container {
+    width: 100%;
+    max-width: 350px;
+    padding: 1.5rem;
+  }
+
+  .auth-container h2 {
+    font-size: 2rem; /* כותרת קטנה יותר */
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .auth-container h2 {
+    font-size: 1.8rem;
+  }
+
+  .auth-container input,
+  .auth-container button {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
 }

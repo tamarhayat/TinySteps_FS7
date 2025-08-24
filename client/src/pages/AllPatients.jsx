@@ -64,7 +64,7 @@ export default function AllPatients() {
         ) : (
           <div className="appointments-grid">
             {patients.map((p) => (
-              <div key={p.id} className="appointment-card">
+              <div key={p.id} className="appointments-card">
                 <div className="appointment-header">
                   <div className="appointment-icon">
                     <User className="icon" />

@@ -69,7 +69,6 @@ const addFile = async (req, res) => {
   }
 };
 
-
 // update file
 const updateFile = async (req, res) => {
   const { child_id, description, file_path } = req.body;

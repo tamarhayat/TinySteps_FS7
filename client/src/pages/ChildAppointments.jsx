@@ -10,39 +10,37 @@ export default function ChildAppointments() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const res = await fetch(`http://localhost:3000/api/appointments/child/${childId}`);
-        if (!res.ok) throw new Error("Failed to fetch appointments");
-        const data = await res.json();
+      const fetchAppointments = async () => {
+        try {
+          const res = await fetch(`http://localhost:3000/api/appointments/child/${childId}`);
+          if (!res.ok) throw new Error("Failed to fetch appointments");
+          const data = await res.json();
 
-        const appointmentsWithNurse = await Promise.all(
-          data.map(async (a) => {
-            try {
-              const resNurse = await fetch(`http://localhost:3000/api/users/nurse/${a.nurse_id}`);
-              const nurse = await resNurse.json();
+          const nursesRes = await fetch("http://localhost:3000/api/users?role=nurse"); 
+          if (!nursesRes.ok) throw new Error("Failed to fetch nurses");
+          const nursesData = await nursesRes.json();
 
-              return {
-                ...a,
-                nurse_name: `${nurse.first_name} ${nurse.last_name}`,
-              };
-            } catch {
-              return { ...a, nurse_name: "Unknown Nurse" };
-            }
-          })
-        );
-        setAppointments(appointmentsWithNurse);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to fetch appointments. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+          const nursesMap = nursesData.reduce((acc, nurse) => {
+            acc[nurse.id] = `${nurse.first_name} ${nurse.last_name}`;
+            return acc;
+          }, {});
 
-    fetchAppointments();
-  }, [childId]);
+          const appointmentsWithNurse = data.map((a) => ({
+            ...a,
+            nurse_name: nursesMap[a.nurse_id] || "Unknown Nurse",
+          }));
 
+          setAppointments(appointmentsWithNurse);
+        } catch (err) {
+          console.error(err);
+          setError("Failed to fetch appointments. Please try again later.");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchAppointments();
+    }, [childId]);
   if (loading) {
     return (
       <div className="loading-container">
@@ -88,7 +86,7 @@ export default function ChildAppointments() {
               return (
                 <div
                   key={a.id}
-                  className={`appointment-card ${isPast ? "past" : "upcoming"}`}
+                  className={`appointments-card ${isPast ? "past" : "upcoming"}`}
                 >
                   <div className="appointment-header">
                     <div className="appointment-icon">

@@ -61,15 +61,23 @@ const getAvailableAppointments = async (req, res) => {
 };
 
 
-// add new appointment (יצירת תור חדש)
+// add new appointment
 const addAppointment = async (req, res) => {
   const { nurseId } = req.params;
   const { appointment_time } = req.body;
 
   try {
+    const now = new Date();
+    const appointmentDate = new Date(appointment_time);
+
+    if (appointmentDate < now) {
+      return res.status(400).json({ error: "Cannot create an appointment in the past" });
+    }
+    const formattedDate = appointmentDate.toISOString().slice(0, 19).replace('T', ' ');
+
     const [result] = await mainDB.query(
       'INSERT INTO appointments (nurse_id, appointment_time, status) VALUES (?, ?, "available")',
-      [nurseId, appointment_time]
+      [nurseId, formattedDate]
     );
 
     res.json({ message: 'Appointment created successfully', id: result.insertId });
@@ -107,6 +115,46 @@ const updateAppointment = async (req, res) => {
   }
 };
 
+// nurse updates an appointment 
+// controllers/appointmentController.js
+const updateAppointmentNurse = async (req, res) => {
+  const { child_id } = req.body;
+  const { id } = req.params;
+
+  if (!child_id) {
+    return res.status(400).json({ error: "child_id is required" });
+  }
+
+  try {
+    // Make sure child exists
+    const [childRows] = await mainDB.query("SELECT id FROM children WHERE id = ?", [child_id]);
+    if (childRows.length === 0) {
+      return res.status(404).json({ error: "Child not found" });
+    }
+
+    // Update appointment (only if it is still available)
+    const [result] = await mainDB.query(
+      "UPDATE appointments SET child_id = ?, status = 'booked' WHERE id = ? AND status = 'available'",
+      [child_id, id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(400).json({ error: "Appointment not available" });
+    }
+
+    // Return updated appointment
+    const [updated] = await mainDB.query("SELECT * FROM appointments WHERE id = ?", [id]);
+    res.json(updated[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to book appointment" });
+  }
+};
+
+
+
+
+
 // delete appointment
 const deleteAppointment = async (req, res) => {
   try {
@@ -125,5 +173,6 @@ module.exports = {
   getAvailableAppointments,
   addAppointment,
   updateAppointment,
+  updateAppointmentNurse,
   deleteAppointment
 };

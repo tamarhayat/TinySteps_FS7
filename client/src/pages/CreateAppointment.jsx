@@ -1,22 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Calendar,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-  Loader2
-} from "lucide-react";
+import { Calendar, Clock, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import "./CreateAppointment.css";
 
 export default function CreateAppointment() {
-  const { nurseId } = useParams(); // or pull from logged-in user
+  const { nurseId } = useParams();
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  // Clear messages after 5 seconds
+  useEffect(() => {
+    if (success || error) {
+      const timer = setTimeout(() => {
+        setSuccess("");
+        setError("");
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, error]);
 
   const handleCreate = async () => {
     setError("");
@@ -27,7 +31,13 @@ export default function CreateAppointment() {
       return;
     }
 
-    const appointmentDateTime = `${date} ${time}:00`;
+    const appointmentDateTime = new Date(`${date}T${time}:00`);
+    const now = new Date();
+
+    if (appointmentDateTime < now) {
+      setError("You cannot select a past date or time");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -36,7 +46,7 @@ export default function CreateAppointment() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nurse_id: nurseId,
-          appointment_time: appointmentDateTime,
+          appointment_time: appointmentDateTime.toISOString(),
         }),
       });
 
@@ -78,67 +88,55 @@ export default function CreateAppointment() {
             <p>{error}</p>
           </div>
         )}
+
         <div className="form-container">
           <div className="form-grid">
             <div className="form-field">
-              <label htmlFor="date"><Calendar className="detail-icon" /> Date</label>
+              <label htmlFor="date">
+                <Calendar className="detail-icon" /> Date
+              </label>
               <input
                 type="date"
                 id="date"
                 value={date}
+                min={new Date().toISOString().split("T")[0]} // מונע בחירה בתאריך עבר
                 onChange={(e) => setDate(e.target.value)}
               />
             </div>
 
             <div className="form-field">
               <label htmlFor="time">
-                <Clock className="detail-icon" />Time
+                <Clock className="detail-icon" /> Time
               </label>
-              <div className="select-wrapper">
-                <select
+              <div className="time-input-wrapper">
+                <input
+                  type="time"
                   id="time"
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
-                >
-                  <option value="" disabled>
-                    HH:MM
-                  </option>
-                  {Array.from({ length: (20 - 8) * 4 + 1 }, (_, i) => {
-                    const h = 8 + Math.floor(i / 4);       // hour from 8 to 20
-                    const m = (i % 4) * 15;               // 0, 15, 30, 45
-                    const hourStr = h.toString().padStart(2, "0");
-                    const minStr = m.toString().padStart(2, "0");
-                    return (
-                      <option key={i} value={`${hourStr}:${minStr}`}>
-                        {hourStr}:{minStr}
-                      </option>
-                    );
-                  })}
-                </select>
-                <Clock className="select-icon" />
+                />
               </div>
-
             </div>
+          </div>
 
-            <div className="form-actions">
-              <button
-                onClick={handleCreate}
-                className="book-button"
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="button-spinner" />
-                    Creating...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle className="button-icon" />
-                    Create Appointment
-                  </>
-                )}
-              </button>
-            </div>
+          <div className="form-actions">
+            <button
+              onClick={handleCreate}
+              className="book-button"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="button-spinner" />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="button-icon" />
+                  Create Appointment
+                </>
+              )}
+            </button>
           </div>
         </div>
       </div>

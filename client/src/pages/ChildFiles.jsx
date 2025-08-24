@@ -52,13 +52,16 @@ export default function ChildFiles() {
       });
 
       if (!res.ok) throw new Error("Upload failed");
+      const newFile = await res.json();
 
       setSuccess("File uploaded successfully");
       setError("");
       setFile(null);
       setDescription("");
       setShowForm(false);
-      fetchFiles();
+
+      // Add only the new file to the list
+      setFiles((prev) => [newFile.file, ...prev]);
     } catch (err) {
       console.error(err);
       setError("Failed to upload file");

@@ -11,6 +11,7 @@ router.get('/child/:childId', appointmentController.getAppointmentsByChildId);
 
 router.get('/:id', appointmentController.getAppointmentById);
 router.put('/:id', appointmentController.updateAppointment);
+router.put('/:id/book', appointmentController.updateAppointmentNurse);
 router.delete('/:id', appointmentController.deleteAppointment);
 
 
